@@ -1,0 +1,8 @@
+﻿  CGAL_geodesic.cpp
+  Edge_Dijkstra.cpp
+  Fast_Marching_Plane.cpp
+Fast_Marching_Plane.cpp(21): warning C4018: '<': signed/unsigned mismatch
+Fast_Marching_Plane.cpp(73): warning C4244: 'initializing': conversion from 'double' to 'int', possible loss of data
+  OffWriter.cpp
+  Source.cpp
+LINK : fatal error LNK1104: cannot open file 'CGAL-vc140-mt-4.11.lib'
