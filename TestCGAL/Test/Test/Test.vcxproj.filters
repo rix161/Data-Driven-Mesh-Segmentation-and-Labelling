@@ -22,6 +22,15 @@
     <Filter Include="Header Files\Geodesic_Distance">
       <UniqueIdentifier>{3fd35a19-a17a-402e-bfad-7241e860fd6a}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\Utils">
+      <UniqueIdentifier>{8f3b1301-f024-42d7-9edf-d4f7eaa552db}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Utils">
+      <UniqueIdentifier>{297888ef-0051-4796-b54b-7c070b4c72b9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Shaders">
+      <UniqueIdentifier>{714f0547-2f70-44c8-bd37-aaac4fdeb0e8}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Source.cpp">
@@ -38,6 +47,18 @@
     </ClCompile>
     <ClCompile Include="OffWriter.cpp">
       <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="CG_Renderer.cpp">
+      <Filter>Source Files\Renderer</Filter>
+    </ClCompile>
+    <ClCompile Include="FileReader.cpp">
+      <Filter>Source Files\Utils</Filter>
+    </ClCompile>
+    <ClCompile Include="ShaderHelper.cpp">
+      <Filter>Source Files\Utils</Filter>
+    </ClCompile>
+    <ClCompile Include="AGDRenderer.cpp">
+      <Filter>Source Files\Utils</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -59,11 +80,25 @@
     <ClInclude Include="Off_Writer.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="C:\Users\Rohith\Downloads\ogldev-source\Include\ogldev_math_3d.h">
+    <ClInclude Include="CGRenderer.h">
       <Filter>Header Files\Renderer</Filter>
     </ClInclude>
-    <ClInclude Include="C:\Users\Rohith\Downloads\ogldev-source\Include\ogldev_util.h">
+    <ClInclude Include="FileReader.h">
+      <Filter>Header Files\Utils</Filter>
+    </ClInclude>
+    <ClInclude Include="ShaderHelper.h">
+      <Filter>Header Files\Utils</Filter>
+    </ClInclude>
+    <ClInclude Include="AGDRenderer.h">
       <Filter>Header Files\Renderer</Filter>
     </ClInclude>
+    <ClInclude Include="GenericMesh.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <Xsd Include="VertexShader.xsd">
+      <Filter>Shaders</Filter>
+    </Xsd>
   </ItemGroup>
 </Project>

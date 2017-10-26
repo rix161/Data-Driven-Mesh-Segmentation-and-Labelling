@@ -37,11 +37,6 @@ void FastMarchingPlanes::compute() {
 	double max = -9999;
 	OffWriter writter;
 
-	std::vector<Kernel::Point_3>vertexIndex;
-	std::vector<std::vector<int>>vectexColor;
-	std::vector<std::deque<int>>faceIndex;
-	std::vector<std::vector<int>>faceColor;
-
 	for (vertex_iterator it = mMainMesh.vertices().begin(); it != mMainMesh.vertices().end(); it++) {
 		double agdDist = getAverageGeodesicDistance(it);
 		Kernel::Point_3 pt = mMainMesh.point(*it);

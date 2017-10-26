@@ -74,7 +74,7 @@
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
       <SDLCheck>true</SDLCheck>
-      <AdditionalIncludeDirectories>C:\Users\Rohith\Downloads\ogldev-source\Include;F:\Masters\SemI\Computer Graphics\LibFolder\freeglut-MSVC-3.0.0-2.mp\freeglut\include;F:\CGAL32\include;F:\Masters\SemI\Computer Graphics\LibFolder\glew-2.1.0-win32\glew-2.1.0\include\GL;F:\Masters\SemI\Computer Graphics\LibFolder\glfw-3.2.1.bin.WIN32\include;F:\CGAL32\build\include;F:\CGAL32\auxiliary\gmp\include;F:\boost\boost_1_65_1;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>F:\glmmaster;C:\Users\Rohith\Downloads\ogldev-source\Include;F:\Masters\SemI\Computer Graphics\LibFolder\freeglut-MSVC-3.0.0-2.mp\freeglut\include;F:\CGAL32\include;F:\Masters\SemI\Computer Graphics\LibFolder\glew-2.1.0-win32\glew-2.1.0\include\GL;F:\Masters\SemI\Computer Graphics\LibFolder\glfw-3.2.1.bin.WIN32\include;F:\CGAL32\build\include;F:\CGAL32\auxiliary\gmp\include;F:\boost\boost_1_65_1;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <Link>
@@ -102,7 +102,7 @@
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>true</SDLCheck>
-      <AdditionalIncludeDirectories>C:\Users\Rohith\Downloads\ogldev-source\Include;F:\Masters\SemI\Computer Graphics\LibFolder\freeglut-MSVC-3.0.0-2.mp\freeglut\include;F:\CGAL32\include;F:\Masters\SemI\Computer Graphics\LibFolder\glew-2.1.0-win32\glew-2.1.0\include\GL;F:\Masters\SemI\Computer Graphics\LibFolder\glfw-3.2.1.bin.WIN32\include;F:\CGAL32\build\include;F:\CGAL32\auxiliary\gmp\include;F:\boost\boost_1_65_1;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>C:\Users\Rohith\Downloads\ogldev-source\Include;F:\Masters\SemI\Computer Graphics\LibFolder\freeglut-MSVC-3.0.0-2.mp\freeglut\include;F:\CGAL32\include;F:\Masters\SemI\Computer Graphics\LibFolder\glew-2.1.0-win32\glew-2.1.0\include\GL;F:\Masters\SemI\Computer Graphics\LibFolder\glfw-3.2.1.bin.WIN32\include;F:\CGAL32\build\include;F:\CGAL32\auxiliary\gmp\include;F:\boost\boost_1_65_1;F:\glmmaster;F:\glmmaster\glm;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <Link>
@@ -127,21 +127,34 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="AGDRenderer.cpp" />
     <ClCompile Include="CGAL_geodesic.cpp" />
+    <ClCompile Include="CG_Renderer.cpp" />
     <ClCompile Include="Edge_Dijkstra.cpp" />
     <ClCompile Include="Fast_Marching_Plane.cpp" />
+    <ClCompile Include="FileReader.cpp" />
     <ClCompile Include="OffWriter.cpp" />
+    <ClCompile Include="ShaderHelper.cpp" />
     <ClCompile Include="Source.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="C:\Users\Rohith\Downloads\ogldev-source\Include\ogldev_math_3d.h" />
-    <ClInclude Include="C:\Users\Rohith\Downloads\ogldev-source\Include\ogldev_util.h" />
+    <ClInclude Include="AGDRenderer.h" />
     <ClInclude Include="CGAL_geodesic.h" />
+    <ClInclude Include="CGRenderer.h" />
     <ClInclude Include="Common_Djikstra.h" />
     <ClInclude Include="Edge_Dijkstra.h" />
     <ClInclude Include="Fast_Marching_Plane.h" />
+    <ClInclude Include="FileReader.h" />
+    <ClInclude Include="GenericMesh.h" />
     <ClInclude Include="Off_Writer.h" />
+    <ClInclude Include="ShaderHelper.h" />
     <ClInclude Include="updatePriorityQueue.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="AGDVertexShader.vs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="AGDFragmentShader.fs" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

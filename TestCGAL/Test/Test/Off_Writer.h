@@ -1,6 +1,7 @@
 #ifndef OFF_WRITER_HEADER
 #define OFF_WRITER_HEADER
 #include "CGAL_geodesic.h"
+#include "GenericMesh.h"
 #include<vector>
 #include <iostream>
 #include <fstream>
@@ -21,6 +22,7 @@ public:
 		int numOfFaces,
 		int numOfEdges);
 	
+	GenericMesh ReadFile(const char*);
 	
 };
 

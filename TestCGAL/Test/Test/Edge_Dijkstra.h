@@ -2,15 +2,16 @@
 #define __EDGE_DIJSTRA__
 #include "CGAL_geodesic.h"
 #include "Common_Djikstra.h"
-#include <vector>
+#include "GenericMesh.h"
 
-class EdgeDijkstra{
+class EdgeDijkstra : public GenericMesh {
 protected:
 	Triangle_mesh mMainMesh;
 
 public:
 	EdgeDijkstra(Triangle_mesh mesh) {
 		mMainMesh = mesh;
+		mIsValid = true;
 	};
 
 	void compute();
