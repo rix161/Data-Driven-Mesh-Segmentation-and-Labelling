@@ -1,2 +1,2 @@
 Implementaion of Average geodesic distance using fast marching
-![GAMEIMAGE](https://github.com/rix161/Zombie-Run/blob/master/ScreenShots/Game.png)
+![AGDIMAGE](https://github.com/rix161/SBU_ComputerGraphics/tree/master/TestCGAL/Test/SceenShots)
