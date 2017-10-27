@@ -11,7 +11,7 @@ int main(int argc, char** argv)
 {
 	/*Triangle_mesh tmesh;
 
-	std::ifstream in("F:\\Masters\\SemI\\Computer Graphics\\Input Meshes\\offFiles\\Models\\mushroom2.off");
+	std::ifstream in("F:\\Masters\\SemI\\Computer Graphics\\Input Meshes\\offFiles\\output\\cube.off");
 	in >> tmesh;
 	in.close();
 	
@@ -26,19 +26,19 @@ int main(int argc, char** argv)
 	std::cout << "NaiveDjikstra: " << avgDistanceDjik << std::endl;
 
 	FastMarchingPlanes fmPlane(tmesh);
-	double avgDistancefMP = fmPlane.getAverageGeodesicDistanc
-	e(tmesh.vertices().begin());
+	double avgDistancefMP = fmPlane.getAverageGeodesicDistance(tmesh.vertices().begin());
 	std::cout << "FastMarching: " << avgDistancefMP << std::endl;
 	fmPlane.compute();*/
 
 	OffWriter writter;
-	GenericMesh mesh = writter.ReadFile("F:\\Masters\\SemI\\Computer Graphics\\Input Meshes\\offFiles\\output\\cube.off");
-	AGDRenderer myRenderer(argc, argv, 1024, 768, "AGDRenderer");
+	GenericMesh mesh = writter.ReadFile("F:\\Masters\\SemI\\Computer Graphics\\Input Meshes\\offFiles\\output\\output_king.off");
+	
+	AGDRenderer myRenderer(argc, argv, 1024, 1024, "AGDRenderer");
 	myRenderer.setupRendererParameters(
 		"F:\\Masters\\SemI\\Computer Graphics\\TestCGAL\\Test\\Test\\AGDVertexShader.vs",
 		"F:\\Masters\\SemI\\Computer Graphics\\TestCGAL\\Test\\Test\\AGDFragmentShader.fs",
 		mesh);
-
-	//getchar();
+	
+	glutMainLoop();
 	return 0;
 } 

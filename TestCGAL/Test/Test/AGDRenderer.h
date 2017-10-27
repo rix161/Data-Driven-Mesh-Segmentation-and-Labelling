@@ -17,6 +17,8 @@ protected:
 public:
 	static bool AGDRenderer::mSetupDone;
 	static GLuint AGDRenderer::mVBO;
+	static int AGDRenderer::mVBOSize;
+	static int AGDRenderer::vertexCount;
 	static void renderScene();
 	AGDRenderer(int argc, char** argv, int sizeX, int sizeY, const char* title) {
 		initRenderer(argc, argv, sizeX, sizeY, title);

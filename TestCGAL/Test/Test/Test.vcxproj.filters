@@ -58,7 +58,7 @@
       <Filter>Source Files\Utils</Filter>
     </ClCompile>
     <ClCompile Include="AGDRenderer.cpp">
-      <Filter>Source Files\Utils</Filter>
+      <Filter>Source Files\Renderer</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -97,8 +97,9 @@
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <Xsd Include="VertexShader.xsd">
-      <Filter>Shaders</Filter>
-    </Xsd>
+    <None Include="AGDFragmentShader.fs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="AGDVertexShader.vs" />
   </ItemGroup>
 </Project>

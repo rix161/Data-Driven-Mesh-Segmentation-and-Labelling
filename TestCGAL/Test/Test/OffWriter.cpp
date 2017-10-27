@@ -66,7 +66,7 @@ GenericMesh OffWriter::ReadFile(const char* fileName) {
 			tempColor.push_back(atoi(fields[faceCount2 + 1].c_str()));
 			tempColor.push_back(atoi(fields[faceCount2 + 2].c_str()));
 			tempColor.push_back(atoi(fields[faceCount2 + 3].c_str()));
-			tempColor.push_back(atoi(fields[faceCount2 + 4].c_str()));
+			tempColor.push_back(1);
 			fColor.push_back(tempColor);
 		}
 

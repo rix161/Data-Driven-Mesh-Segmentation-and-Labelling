@@ -34,9 +34,9 @@ public:
 	std::vector<std::vector<int>> getVertexColor() { return vectexColor; }
 	std::vector<std::deque<int>> getFaceIndex() { return faceIndex; }
 	std::vector<std::vector<int>> getFaceColor() { return faceColor; }
-	int getVertexCount() { return mMainMesh.number_of_vertices();}
-	int getFaceCount() { return mMainMesh.number_of_faces(); }
-	int getEdgeCount() { return mMainMesh.number_of_edges(); }
+	int getVertexCount() { return mVertexCount;}
+	int getFaceCount() { return mFaceCount; }
+	int getEdgeCount() { return mEdgeCount; }
 	bool isValid() {return mIsValid;}
 };
 #endif // ! __GENERIC_MESH__
