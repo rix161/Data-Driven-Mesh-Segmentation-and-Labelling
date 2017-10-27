@@ -75,7 +75,7 @@
       <Optimization>Disabled</Optimization>
       <SDLCheck>true</SDLCheck>
       <AdditionalIncludeDirectories>F:\glmmaster;C:\Users\Rohith\Downloads\ogldev-source\Include;F:\Masters\SemI\Computer Graphics\LibFolder\freeglut-MSVC-3.0.0-2.mp\freeglut\include;F:\CGAL32\include;F:\Masters\SemI\Computer Graphics\LibFolder\glew-2.1.0-win32\glew-2.1.0\include\GL;F:\Masters\SemI\Computer Graphics\LibFolder\glfw-3.2.1.bin.WIN32\include;F:\CGAL32\build\include;F:\CGAL32\auxiliary\gmp\include;F:\boost\boost_1_65_1;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;GLM_ENABLE_EXPERIMENTAL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <Link>
       <AdditionalLibraryDirectories>F:\Masters\SemI\Computer Graphics\LibFolder\freeglut-MSVC-3.0.0-2.mp\freeglut\lib;F:\Masters\SemI\Computer Graphics\LibFolder\glew-2.1.0-win32\glew-2.1.0\lib\Release\Win32;F:\Masters\SemI\Computer Graphics\LibFolder\glfw-3.2.1.bin.WIN32\lib-vc2015;F:\boost\boost_1_65_1\libs;F:\CGAL32\build\lib;F:\CGAL32\auxiliary\gmp\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
@@ -148,6 +148,7 @@
     <ClInclude Include="GenericMesh.h" />
     <ClInclude Include="Off_Writer.h" />
     <ClInclude Include="ShaderHelper.h" />
+    <ClInclude Include="Transform.h" />
     <ClInclude Include="updatePriorityQueue.h" />
   </ItemGroup>
   <ItemGroup>

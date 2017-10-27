@@ -39,7 +39,7 @@ GenericMesh OffWriter::ReadFile(const char* fileName) {
 		Kernel::Point_3 vPoint(std::atof(fields[0].c_str()), std::atof(fields[1].c_str()), std::atof(fields[2].c_str()));
 		vData.push_back(vPoint);
 		std::vector<int>tempColor;
-		if(fields.size() > 3) {
+		if(fields.size() > 3 && fields[3]!="") {
 			tempColor.push_back(atoi(fields[3].c_str()));
 			tempColor.push_back(atoi(fields[4].c_str()));
 			tempColor.push_back(atoi(fields[5].c_str()));

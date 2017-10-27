@@ -34,9 +34,7 @@ int ShaderProgramHelper::generateProgram(const char* vertexShader, const char* f
 	GLchar errorStatus[1024] = { 0 };
 
 	std::string vertexShaderCode = fReader.getFile(vertexShader);
-	std::cout<< vertexShaderCode;
 	std::string fragmentShaderCode = fReader.getFile(fragmentShader);
-	std::cout << fragmentShaderCode;
 	
 	if (vertexShaderCode.empty() || fragmentShaderCode.empty())
 		return -1;

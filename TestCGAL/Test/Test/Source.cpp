@@ -31,7 +31,7 @@ int main(int argc, char** argv)
 	fmPlane.compute();*/
 
 	OffWriter writter;
-	GenericMesh mesh = writter.ReadFile("F:\\Masters\\SemI\\Computer Graphics\\Input Meshes\\offFiles\\output\\output_king.off");
+	GenericMesh mesh = writter.ReadFile("F:\\Masters\\SemI\\Computer Graphics\\Input Meshes\\offFiles\\output\\output_king_unit.off");
 	
 	AGDRenderer myRenderer(argc, argv, 1024, 1024, "AGDRenderer");
 	myRenderer.setupRendererParameters(

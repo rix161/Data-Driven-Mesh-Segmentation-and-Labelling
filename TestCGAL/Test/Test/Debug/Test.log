@@ -1,3 +1,14 @@
-﻿  Source.cpp
+﻿  AGDRenderer.cpp
+f:\masters\semi\computer graphics\testcgal\test\test\agdrenderer.cpp(4): warning C4305: 'initializing': truncation from 'int' to 'bool'
+f:\masters\semi\computer graphics\testcgal\test\test\agdrenderer.cpp(32): warning C4018: '<': signed/unsigned mismatch
+f:\masters\semi\computer graphics\testcgal\test\test\agdrenderer.cpp(38): warning C4244: 'argument': conversion from 'const double' to 'const float', possible loss of data
+f:\masters\semi\computer graphics\testcgal\test\test\agdrenderer.cpp(39): warning C4244: 'argument': conversion from 'const double' to 'const float', possible loss of data
+f:\masters\semi\computer graphics\testcgal\test\test\agdrenderer.cpp(40): warning C4244: 'argument': conversion from 'const double' to 'const float', possible loss of data
+f:\masters\semi\computer graphics\testcgal\test\test\agdrenderer.cpp(42): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
+f:\masters\semi\computer graphics\testcgal\test\test\agdrenderer.cpp(43): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
+f:\masters\semi\computer graphics\testcgal\test\test\agdrenderer.cpp(44): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
+f:\masters\semi\computer graphics\testcgal\test\test\agdrenderer.cpp(45): warning C4244: 'argument': conversion from 'int' to 'const float', possible loss of data
+f:\masters\semi\computer graphics\testcgal\test\test\agdrenderer.cpp(65): warning C4305: 'initializing': truncation from 'double' to 'float'
+f:\masters\semi\computer graphics\testcgal\test\test\agdrenderer.cpp(66): warning C4305: '+=': truncation from 'double' to 'float'
   Test.vcxproj -> F:\Masters\SemI\Computer Graphics\TestCGAL\Test\Debug\Test.exe
   Test.vcxproj -> F:\Masters\SemI\Computer Graphics\TestCGAL\Test\Debug\Test.pdb (Partial PDB)

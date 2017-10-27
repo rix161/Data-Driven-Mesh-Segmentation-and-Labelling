@@ -4,6 +4,7 @@
 #include "ShaderHelper.h"
 #include "GenericMesh.h"
 #include <glm/glm.hpp>
+#include <glm/gtc/type_ptr.hpp>
 
 
 class AGDRenderer{
@@ -16,9 +17,16 @@ protected:
 
 public:
 	static bool AGDRenderer::mSetupDone;
+
 	static GLuint AGDRenderer::mVBO;
 	static int AGDRenderer::mVBOSize;
+
 	static int AGDRenderer::vertexCount;
+	static GLuint AGDRenderer::uMVPMatrix;
+
+	static int windowX, windowY;
+	static float FOV, nearPlane, farPlane;
+
 	static void renderScene();
 	AGDRenderer(int argc, char** argv, int sizeX, int sizeY, const char* title) {
 		initRenderer(argc, argv, sizeX, sizeY, title);
