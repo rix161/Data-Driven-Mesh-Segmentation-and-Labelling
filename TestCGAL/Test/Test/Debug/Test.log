@@ -10,5 +10,7 @@ f:\masters\semi\computer graphics\testcgal\test\test\agdrenderer.cpp(44): warnin
 f:\masters\semi\computer graphics\testcgal\test\test\agdrenderer.cpp(45): warning C4244: 'argument': conversion from 'int' to 'const float', possible loss of data
 f:\masters\semi\computer graphics\testcgal\test\test\agdrenderer.cpp(65): warning C4305: 'initializing': truncation from 'double' to 'float'
 f:\masters\semi\computer graphics\testcgal\test\test\agdrenderer.cpp(66): warning C4305: '+=': truncation from 'double' to 'float'
-  Test.vcxproj -> F:\Masters\SemI\Computer Graphics\TestCGAL\Test\Debug\Test.exe
-  Test.vcxproj -> F:\Masters\SemI\Computer Graphics\TestCGAL\Test\Debug\Test.pdb (Partial PDB)
+  Generating Code...
+  Skipping... (no relevant changes detected)
+  Source.cpp
+LINK : fatal error LNK1104: cannot open file 'F:\Masters\SemI\Computer Graphics\TestCGAL\Test\Debug\Test.exe'

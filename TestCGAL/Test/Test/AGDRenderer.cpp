@@ -66,7 +66,7 @@ void AGDRenderer::renderScene() {
 	angle += 0.0002;
 
 	
-	mTransformation.translate(glm::vec3(0.0, 0.0,-3.0));
+	mTransformation.translate(glm::vec3(-0.5, -0.5,-3.0));
 	mTransformation.rotate(angle, glm::vec3(1.0f, 1.0f, 0.0f));
 	mTransformation.scale(glm::vec3(1.0, 1.0, 1.0));
 
