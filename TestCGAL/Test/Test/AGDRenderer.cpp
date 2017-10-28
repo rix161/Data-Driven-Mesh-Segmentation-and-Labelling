@@ -72,6 +72,7 @@ void AGDRenderer::renderScene() {
 
 	mTransformation.projection(AGDRenderer::FOV, AGDRenderer::windowX, AGDRenderer::windowY, AGDRenderer::nearPlane, AGDRenderer::farPlane);
 
+
 	glUniformMatrix4fv(uMVPMatrix, 1, GL_FALSE, glm::value_ptr(mTransformation.getMatrix()));
 
 	glEnableVertexAttribArray(0);
@@ -87,6 +88,7 @@ void AGDRenderer::renderScene() {
 
 	glutSwapBuffers();
 }
+
 
 
 void AGDRenderer::initRenderer(int argc, char** argv, int sizeX, int sizeY, const char* title) {
