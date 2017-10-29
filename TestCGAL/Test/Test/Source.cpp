@@ -4,6 +4,7 @@
 #include "CGAL_geodesic.h"
 #include "Edge_Dijkstra.h"
 #include "Fast_Marching_Plane.h"
+#include "ShapeDiameterFunction.h"
 #include "Off_Writer.h"
 #include "AGDRenderer.h"
 
@@ -28,7 +29,7 @@ int main(int argc, char** argv)
 	FastMarchingPlanes fmPlane(tmesh);
 	double avgDistancefMP = fmPlane.getAverageGeodesicDistance(tmesh.vertices().begin());
 	std::cout << "FastMarching: " << avgDistancefMP << std::endl;
-	fmPlane.compute();*/
+	fmPlane.compute();
 
 	OffWriter writter;
 	GenericMesh mesh = writter.ReadFile("F:\\Masters\\SemI\\Computer Graphics\\Input Meshes\\offFiles\\output\\output_king_unit.off");
@@ -37,8 +38,15 @@ int main(int argc, char** argv)
 	myRenderer.setupRendererParameters(
 		"F:\\Masters\\SemI\\Computer Graphics\\TestCGAL\\Test\\Test\\AGDVertexShader.vs",
 		"F:\\Masters\\SemI\\Computer Graphics\\TestCGAL\\Test\\Test\\AGDFragmentShader.fs",
-		mesh);
+		mesh);*/
+
+	Triangle_mesh tmesh2;
+	std::ifstream in2("F:\\Masters\\SemI\\Computer Graphics\\Input Meshes\\offFiles\\output\\cube.off");
+	in2 >> tmesh2;
+	in2.close();
 	
+	ShapeDiameterFunction sdf;
+	sdf.compute(tmesh2,tmesh2.faces_begin(),60,30);
 	glutMainLoop();
 	return 0;
 } 
