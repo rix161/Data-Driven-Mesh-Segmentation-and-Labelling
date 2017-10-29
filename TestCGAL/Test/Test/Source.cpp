@@ -7,6 +7,8 @@
 #include "ShapeDiameterFunction.h"
 #include "Off_Writer.h"
 #include "AGDRenderer.h"
+#include "SDFRenderer.h"
+#include "SDFUnit.h"
 
 int main(int argc, char** argv)
 {
@@ -29,9 +31,9 @@ int main(int argc, char** argv)
 	FastMarchingPlanes fmPlane(tmesh);
 	double avgDistancefMP = fmPlane.getAverageGeodesicDistance(tmesh.vertices().begin());
 	std::cout << "FastMarching: " << avgDistancefMP << std::endl;
-	fmPlane.compute();
+	fmPlane.compute();*/
 
-	OffWriter writter;
+	/*OffWriter writter;
 	GenericMesh mesh = writter.ReadFile("F:\\Masters\\SemI\\Computer Graphics\\Input Meshes\\offFiles\\output\\output_king_unit.off");
 	
 	AGDRenderer myRenderer(argc, argv, 1024, 1024, "AGDRenderer");
@@ -45,8 +47,21 @@ int main(int argc, char** argv)
 	in2 >> tmesh2;
 	in2.close();
 	
+	OffWriter writter;
+	GenericMesh mesh = writter.ReadFile("F:\\Masters\\SemI\\Computer Graphics\\Input Meshes\\offFiles\\output\\output_cube.off");
+
+
 	ShapeDiameterFunction sdf;
-	sdf.compute(tmesh2,tmesh2.faces_begin(),60,30);
+	std::vector<SDFUnit> rays = sdf.compute(tmesh2, tmesh2.faces_begin(), 60, 30);
+
+	SDFRenderer myRenderer(argc, argv, 1024, 1024, "SDFRenderer");
+
+	myRenderer.setupRendererParameters(
+		"F:\\Masters\\SemI\\Computer Graphics\\TestCGAL\\Test\\Test\\SDFVertexShader.vs",
+		"F:\\Masters\\SemI\\Computer Graphics\\TestCGAL\\Test\\Test\\SDFFragmentShader.fs",
+		mesh,
+		1.0);
+
 	glutMainLoop();
 	return 0;
 } 

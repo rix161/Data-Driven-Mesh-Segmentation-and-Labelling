@@ -64,15 +64,15 @@ std::vector<Kernel::Vector_3> ShapeDiameterFunction::buildRays(glm::vec3 normal,
 	for (int i = 0; i < count; i++) {
 		float degAngle = RandomNumber(-angle, angle);
 		degAngle = degAngle < 0 ? 180 + degAngle:degAngle;
-		std::cout << "DegAngle:" << degAngle<<std::endl;
+		//std::cout << "DegAngle:" << degAngle<<std::endl;
 		glm::vec3 temp = glm::rotate(normal, glm::radians(degAngle), glm::vec3(1,0,0));
-		glm::vec3 temp2 = glm::rotate(normal, degAngle, glm::vec3(1, 0, 0));
+		/*glm::vec3 temp2 = glm::rotate(normal, degAngle, glm::vec3(1, 0, 0));
 		std::cout << "Angle B/w vectors1:" << glm::degrees(glm::angle(temp, normal)) << std::endl;
-		std::cout << "Angle B/w vectors2:" << glm::angle(temp2, normal)<< std::endl;
+		std::cout << "Angle B/w vectors2:" << glm::angle(temp2, normal)<< std::endl;*/
 		Kernel::Vector_3 ray(temp[0], temp[1], temp[2]);
-		Kernel::Vector_3 ray2(temp2[0], temp2[1], temp2[2]);
+		/*Kernel::Vector_3 ray2(temp2[0], temp2[1], temp2[2]);
 		std::cout << "CGAL Angle B/w vectors1:" <<CGAL::angle(ray,normal2) << std::endl;
-		std::cout << "CGAL Angle B/w vectors2:" << CGAL::angle(ray2, normal2) << std::endl;
+		std::cout << "CGAL Angle B/w vectors2:" << CGAL::angle(ray2, normal2) << std::endl;*/
 		rays.push_back(ray);
 	}
 	return rays;
