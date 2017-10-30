@@ -21,11 +21,12 @@ bool ShapeDiameterFunction::doesInterset(
 		triangleVertices.push_back(mesh.point((*vbegin)));
 	}
 	
+	//std::cout << "Vec1:" << triangleVertices[0] << " Vec2:" << triangleVertices[1] << " Vec3:" << triangleVertices[2]<<std::endl;
 	Kernel::Vector_3 vecBA = triangleVertices[1] - triangleVertices[0];
 	Kernel::Vector_3 vecCA = triangleVertices[2] - triangleVertices[0];
 	Kernel::Vector_3 vecP = CGAL::cross_product(rayDirection, vecCA);
 	double det = vecBA * vecP;
-	if (det < threshold)
+	if (det > threshold && det < threshold)
 		return false;
 
 	double invDet = 1 / det;
@@ -36,10 +37,10 @@ bool ShapeDiameterFunction::doesInterset(
 
 	Kernel::Vector_3 vecQ = CGAL::cross_product(vecT, vecBA);
 	double parameterV = rayDirection*vecQ*invDet;
-	if (parameterV < 0 || parameterU>1) return false;
+	if (parameterV < 0 || parameterV>1) return false;
 	
 	//compute Intersection Point
-	double parameterT = vecCA*vecQ;
+	double parameterT = vecCA*vecQ*invDet;
 	if (parameterT > threshold) {
 		intersectionPoint = source + parameterT*rayDirection;
 		return true;
@@ -60,10 +61,10 @@ std::vector<Kernel::Vector_3> ShapeDiameterFunction::buildRays(glm::vec3 normal,
 	std::vector<Kernel::Vector_3> rays;
 	
 	Kernel::Vector_3 normal2(normal[0], normal[1], normal[2]);
-
+	rays.push_back(normal2);
 	for (int i = 0; i < count; i++) {
 		float degAngle = RandomNumber(-angle, angle);
-		degAngle = degAngle < 0 ? 180 + degAngle:degAngle;
+		degAngle = degAngle < 0 ? degAngle:degAngle;
 		//std::cout << "DegAngle:" << degAngle<<std::endl;
 		glm::vec3 temp = glm::rotate(normal, glm::radians(degAngle), glm::vec3(1,0,0));
 		/*glm::vec3 temp2 = glm::rotate(normal, degAngle, glm::vec3(1, 0, 0));
@@ -83,7 +84,7 @@ std::vector<SDFUnit> ShapeDiameterFunction::compute(Triangle_mesh mesh, face_ite
 	std::vector<Kernel::Point_3> faceVertices;
 	CGAL::Vertex_around_face_iterator<Triangle_mesh> vbegin, vend;
 	std::vector<SDFUnit> sdfData;
-	glm::vec3 lineColor(1.0, 0.0, 0.0);
+	glm::vec3 lineColor(0.0, 1.0, 0.0);
 
 	for (boost::tie(vbegin, vend) = CGAL::vertices_around_face(mesh.halfedge(*face), mesh);
 		vbegin != vend; vbegin++) {
@@ -93,17 +94,22 @@ std::vector<SDFUnit> ShapeDiameterFunction::compute(Triangle_mesh mesh, face_ite
 	if (faceVertices.size() != 3) return sdfData;
 
 	Kernel::Vector_3 faceNormal = CGAL::normal(faceVertices[0], faceVertices[1], faceVertices[2]);
+	faceNormal = faceNormal*-1;
 	Kernel::Point_3 faceCenter = CGAL::centroid(faceVertices[0], faceVertices[1], faceVertices[2]);
-	std::cout << "FaceNormal:" << faceNormal << "FaceCenter" << faceCenter << std::endl;
+	//std::cout << "FaceNormal:" << faceNormal << "FaceCenter" << faceCenter << std::endl;
 	glm::vec3 rotVec = glm::vec3(faceNormal.x(), faceNormal.y(), faceNormal.z());
 	std::vector<Kernel::Vector_3> rays = buildRays(rotVec, rayCount, coneAngle);
 
-
+	int faceCount = 0;
 	for (face_iterator fIter = mesh.faces_begin(); fIter != mesh.faces_end(); fIter++) {
+		std::cout << " FaceCount:" << faceCount++ << std::endl;
 		for (Kernel::Vector_3 ray : rays) {
 			Kernel::Point_3 interPoint(0, 0, 0);
 			if (doesInterset(faceCenter, ray, fIter,mesh,interPoint)) {
-				sdfData.push_back(SDFUnit(fIter, faceCenter, interPoint, lineColor));
+				if(ray == faceNormal)
+					sdfData.push_back(SDFUnit(fIter, faceCenter, interPoint, glm::vec3(1.0, 0.0, 0.0)));
+				else
+					sdfData.push_back(SDFUnit(fIter, faceCenter, interPoint, lineColor));
 			}
 		}
 	}
