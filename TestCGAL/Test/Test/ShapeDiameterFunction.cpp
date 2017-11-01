@@ -13,7 +13,7 @@ bool ShapeDiameterFunction::doesInterset(
 
 	std::vector<Kernel::Point_3> triangleVertices;
 	Kernel::Vector_3 rayDirection = direction;
-	double threshold = 0.0000001;
+	double threshold = 1e-8;
 
 	CGAL::Vertex_around_face_iterator<Triangle_mesh> vbegin, vend;
 	for (boost::tie(vbegin, vend) = CGAL::vertices_around_face(mesh.halfedge(*intersectTriangle), mesh);
@@ -66,7 +66,7 @@ std::vector<Kernel::Vector_3> ShapeDiameterFunction::buildRays(glm::vec3 normal,
 		float degAngle = RandomNumber(-angle, angle);
 		degAngle = degAngle < 0 ? degAngle:degAngle;
 		//std::cout << "DegAngle:" << degAngle<<std::endl;
-		glm::vec3 temp = glm::rotate(normal, glm::radians(degAngle), glm::vec3(1,0,0));
+		glm::vec3 temp = glm::rotate(normal, glm::radians(degAngle), glm::vec3(RandomNumber(0,1), RandomNumber(0, 1), RandomNumber(0, 1)));
 		/*glm::vec3 temp2 = glm::rotate(normal, degAngle, glm::vec3(1, 0, 0));
 		std::cout << "Angle B/w vectors1:" << glm::degrees(glm::angle(temp, normal)) << std::endl;
 		std::cout << "Angle B/w vectors2:" << glm::angle(temp2, normal)<< std::endl;*/
@@ -99,6 +99,7 @@ std::vector<SDFUnit> ShapeDiameterFunction::compute(Triangle_mesh mesh, face_ite
 	//std::cout << "FaceNormal:" << faceNormal << "FaceCenter" << faceCenter << std::endl;
 	glm::vec3 rotVec = glm::vec3(faceNormal.x(), faceNormal.y(), faceNormal.z());
 	std::vector<Kernel::Vector_3> rays = buildRays(rotVec, rayCount, coneAngle);
+	std::cout << " Normal:" << faceNormal << " Ray[0]:" << rays[0] << " Compare:" << (faceNormal == rays[0]);
 
 	int faceCount = 0;
 	for (face_iterator fIter = mesh.faces_begin(); fIter != mesh.faces_end(); fIter++) {

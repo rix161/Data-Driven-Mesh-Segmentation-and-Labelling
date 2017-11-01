@@ -148,7 +148,7 @@ void SDFRenderer::renderScene() {
 	glDisableVertexAttribArray(2);
 
 	glUseProgram(SDFRenderer::mRayProgramId);
-	glLineWidth(5.0f);
+	glLineWidth(2.0f);
 	glUniformMatrix4fv(uMVPMatrix2, 1, GL_FALSE, glm::value_ptr(mTransformation.getMatrix()));
 
 	glEnableVertexAttribArray(0);

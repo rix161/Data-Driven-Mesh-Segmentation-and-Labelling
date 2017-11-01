@@ -52,7 +52,12 @@ int main(int argc, char** argv)
 
 
 	ShapeDiameterFunction sdf;
-	std::vector<SDFUnit> rays = sdf.compute(tmesh2, tmesh2.faces_begin(), 60, 30);
+	int randnum = rand() % ( mesh.getFaceCount()+ 1);
+	randnum = rand() % (mesh.getFaceCount() + 1);
+	randnum = rand() % (mesh.getFaceCount() + 1);
+	face_iterator iter = tmesh2.faces_begin();
+	std::advance(iter, randnum);
+	std::vector<SDFUnit> rays = sdf.compute(tmesh2, iter, 60, 30);
 
 	SDFRenderer myRenderer(argc, argv, 1024, 1024, "SDFRenderer");
 
