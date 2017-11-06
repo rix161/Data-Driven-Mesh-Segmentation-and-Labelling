@@ -15,8 +15,9 @@ protected:
 		Kernel::Point_3 source,
 		Kernel::Vector_3 direction,
 		std::vector<Kernel::Point_3> triangleFaces,
-		Kernel::Point_3 &intersectionPoint);
-	std::vector<Kernel::Vector_3> buildRays(glm::vec3 normal, int count, float angle);
+		Kernel::Point_3 &intersectionPoint,
+		bool bypass=false);
+	std::vector<Kernel::Vector_3> buildRays(glm::vec3 normal, int count, float angle,bool bypass=false);
 
 	void optidoesIntersect(
 		face_iterator triangleFace,
@@ -25,7 +26,7 @@ protected:
 		std::vector<Kernel::Point_3> triangleFaces,
 		std::vector<SDFUnit> &sdfUnits);
 
-	std::vector<SDFUnit> computeIntersection(Kernel::Point_3 faceCenter, Kernel::Vector_3 faceNormal, std::vector<Kernel::Vector_3> rays);
+	std::vector<SDFUnit> computeIntersection(Kernel::Point_3 faceCenter, Kernel::Vector_3 faceNormal, std::vector<Kernel::Vector_3> rays,bool bypass=false);
 
 public:
 

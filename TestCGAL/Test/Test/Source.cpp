@@ -22,7 +22,8 @@ int main(int argc, char** argv)
 	std::chrono::system_clock::time_point start;
 
 	double seconds;
-	const char* fileName = "F:\\Masters\\SemI\\Computer Graphics\\Input Meshes\\offFiles\\TestModels\\mushroom.off";
+	//const char* fileName = "F:\\Masters\\SemI\\Computer Graphics\\Input Meshes\\PaperData\\labeledDb\\LabeledDB_new\\Bearing\\354.off";
+	const char* fileName = "F:\\Masters\\SemI\\Computer Graphics\\Input Meshes\\offFiles\\TestModels\\Apple.off";
 
 	/*Curvature cMesh("F:\\Masters\\SemI\\Computer Graphics\\Input Meshes\\PaperData\\labeledDb\\LabeledDB_new\\Bearing\\mushroom.off");
 	cMesh.crunchMesh();
@@ -41,19 +42,22 @@ int main(int argc, char** argv)
 
 	OffWriter writter;
 	GenericMesh mesh = writter.ReadFile(fileName);
-
-	ShapeDiameterFunction sdf(fileName);
-	sdf.crunchMesh();
 	int randnum = rand() % (mesh.getFaceCount() + 1);
+	randnum = rand() % (mesh.getFaceCount() + 1);
+	randnum = rand() % (mesh.getFaceCount() + 1);
+	randnum = rand() % (mesh.getFaceCount() + 1);
 	randnum = rand() % (mesh.getFaceCount() + 1);
 	randnum = rand() % (mesh.getFaceCount() + 1);
 	face_iterator iter = tmesh2.faces_begin();
 	std::advance(iter, randnum);
-	std::vector<SDFUnit> rays = sdf.compute(iter, 60, 30);
+
+	/*ShapeDiameterFunction sdf(fileName);
+	sdf.crunchMesh();
+	std::vector<SDFUnit> rays = sdf.compute(iter, 60, 30);*/
 
 	VIS vis(fileName);
 	vis.crunchMesh();
-	std::vector<SDFUnit> rays2 = vis.computeFaceVIS(iter, 50);
+	std::vector<SDFUnit> rays2 = vis.computeFaceVIS(iter, 30);
 
 	SDFRenderer myRenderer(argc, argv, 1024, 1024, "SDFRenderer");
 
