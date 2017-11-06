@@ -8,6 +8,9 @@
 #include <fstream>
 #include "Off_Writer.h"
 
+#include <ctime>
+#include <chrono>
+
 typedef CGAL::Linear_algebraCd<Kernel::FT> Linear_op;
 typedef Kernel::Vector_3                        Value;
 typedef std::vector<Value>                      Vector;
@@ -36,10 +39,17 @@ void FastMarchingPlanes::compute() {
 	double min = 9999;
 	double max = -9999;
 	OffWriter writter;
+	int count = 0;
+	std::chrono::system_clock::time_point start;
+	double seconds;
 
 	for (vertex_iterator it = mMainMesh.vertices().begin(); it != mMainMesh.vertices().end(); it++) {
+		start = std::chrono::system_clock::now();
 		double agdDist = getAverageGeodesicDistance(it);
+		seconds = std::chrono::duration_cast<std::chrono::seconds>(std::chrono::system_clock::now() - start).count();
+
 		Kernel::Point_3 pt = mMainMesh.point(*it);
+		std::cout << " " << count++ << "Pt:" << mMainMesh.point(*it) << "Dist:" << agdDist<<"Time:"<<seconds<<std::endl;
 		vertexIndex.push_back(pt);
 		agdMap[pt] = agdDist;
 		if (agdDist > max) max = agdDist;
@@ -220,13 +230,13 @@ void FastMarchingPlanes::computeUpdate(
 	std::set<Kernel::Point_3> &closedSet,
 	std::set<Kernel::Point_3> &unProcessedSet) {
 
-	std::vector<DjiElement> trialNeig = getNeighbors(trial.getVertex(), vertexMap);
+	std::vector<DjiElement> trialNeig = getNeighbors(trial.getVertex(), vertexMap[mMainMesh.point(*trial.getVertex())]);
 
 	for (DjiElement ele : trialNeig) {
 
 		if (fixedSet.count(ele.getPoint()) != 0) continue;
 
-		std::vector<DjiElement> testNeig = getNeighbors(ele.getVertex(), vertexMap);
+		std::vector<DjiElement> testNeig = getNeighbors(ele.getVertex(), vertexMap[mMainMesh.point(*ele.getVertex())]);
 		for (DjiElement testEle : testNeig) {
 
 			if (fixedSet.count(testEle.getPoint()) != 0) {
@@ -278,7 +288,7 @@ double FastMarchingPlanes::getAverageGeodesicDistance(vertex_iterator sourcePoin
 	unprocessedSet.erase(source.getPoint());
 	fixedSet.insert(source.getPoint());
 
-	std::vector<DjiElement> neighbours = getNeighbors(source.getVertex(), vertexMap);
+	std::vector<DjiElement> neighbours = getNeighbors(source.getVertex(), vertexMap[mMainMesh.point(*source.getVertex())]);
 	for (DjiElement ele : neighbours) {
 		closeSet.insert(ele.getPoint());
 		unprocessedSet.erase(ele.getPoint());

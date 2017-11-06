@@ -103,14 +103,14 @@
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>true</SDLCheck>
       <AdditionalIncludeDirectories>C:\Users\Rohith\Downloads\ogldev-source\Include;F:\Masters\SemI\Computer Graphics\LibFolder\freeglut-MSVC-3.0.0-2.mp\freeglut\include;F:\CGAL32\include;F:\Masters\SemI\Computer Graphics\LibFolder\glew-2.1.0-win32\glew-2.1.0\include\GL;F:\Masters\SemI\Computer Graphics\LibFolder\glfw-3.2.1.bin.WIN32\include;F:\CGAL32\build\include;F:\CGAL32\auxiliary\gmp\include;F:\boost\boost_1_65_1;F:\glmmaster;F:\glmmaster\glm;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;GLM_ENABLE_EXPERIMENTAL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <Link>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <IgnoreSpecificDefaultLibraries>gmp-vc100-mt-gd.lib;mpfr-vc100-mt-gd.lib;%(IgnoreSpecificDefaultLibraries)</IgnoreSpecificDefaultLibraries>
-      <AdditionalDependencies>libgmp-10.lib;libmpfr-4.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <AdditionalLibraryDirectories>F:\Masters\SemI\Computer Graphics\LibFolder\freeglut-MSVC-3.0.0-2.mp\freeglut\lib;F:\Masters\SemI\Computer Graphics\LibFolder\glew-2.1.0-win32\glew-2.1.0\lib\Release\Win32;F:\Masters\SemI\Computer Graphics\LibFolder\glfw-3.2.1.bin.WIN32\lib-vc2015;F:\boost\boost_1_65_1\libs;F:\CGAL32\build\lib;F:\CGAL32\auxiliary\gmp\lib;</AdditionalLibraryDirectories>
+      <AdditionalDependencies>libgmp-10.lib;libmpfr-4.lib;opengl32.lib;glew32s.lib;glfw3.lib;glew32.lib;freeglut.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>F:\Masters\SemI\Computer Graphics\LibFolder\freeglut-MSVC-3.0.0-2.mp\freeglut\lib;F:\Masters\SemI\Computer Graphics\LibFolder\glew-2.1.0-win32\glew-2.1.0\lib\Release\Win32;F:\Masters\SemI\Computer Graphics\LibFolder\glfw-3.2.1.bin.WIN32\lib-vc2015;F:\boost\boost_1_65_1\libs;F:\CGAL32\build\lib;F:\CGAL32\auxiliary\gmp\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -130,11 +130,15 @@
     <ClCompile Include="AGDRenderer.cpp" />
     <ClCompile Include="CGAL_geodesic.cpp" />
     <ClCompile Include="CG_Renderer.cpp" />
+    <ClCompile Include="Curvature.cpp" />
     <ClCompile Include="Edge_Dijkstra.cpp" />
     <ClCompile Include="Fast_Marching_Plane.cpp" />
     <ClCompile Include="FileReader.cpp" />
+    <ClCompile Include="GenericMesh.cpp" />
     <ClCompile Include="OffWriter.cpp" />
+    <ClCompile Include="SDFRenderer.cpp" />
     <ClCompile Include="ShaderHelper.cpp" />
+    <ClCompile Include="ShapeDiameterFunction.cpp" />
     <ClCompile Include="Source.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -142,20 +146,29 @@
     <ClInclude Include="CGAL_geodesic.h" />
     <ClInclude Include="CGRenderer.h" />
     <ClInclude Include="Common_Djikstra.h" />
+    <ClInclude Include="Curvature.h" />
+    <ClInclude Include="CurvatureUnit.h" />
     <ClInclude Include="Edge_Dijkstra.h" />
     <ClInclude Include="Fast_Marching_Plane.h" />
     <ClInclude Include="FileReader.h" />
     <ClInclude Include="GenericMesh.h" />
     <ClInclude Include="Off_Writer.h" />
+    <ClInclude Include="SDFRenderer.h" />
+    <ClInclude Include="SDFUnit.h" />
     <ClInclude Include="ShaderHelper.h" />
+    <ClInclude Include="ShapeDiameterFunction.h" />
     <ClInclude Include="Transform.h" />
     <ClInclude Include="updatePriorityQueue.h" />
   </ItemGroup>
   <ItemGroup>
     <Text Include="AGDVertexShader.vs" />
+    <Text Include="SDFFragmentShader.fs" />
+    <Text Include="SDFVertexShader.vs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="AGDFragmentShader.fs" />
+    <None Include="SDFRayFragmentShader.fs" />
+    <None Include="SDFRayVertextShader.vs" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

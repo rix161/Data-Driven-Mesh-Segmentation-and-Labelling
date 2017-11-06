@@ -47,9 +47,8 @@ void SDFRenderer::setupRendererParameters(
 
 	std::vector<GLfloat> meshData;
 	for (int faceIter = 0; faceIter < faceIndex.size(); faceIter++) {
-		std::cout << "FaceInter:" << faceIter << " Size:" << faceIndex.size();
 		std::deque<int> faceValues = faceIndex[faceIter];
-		std::vector<int> faceColorValues = faceColor[faceIter];
+		//std::vector<int> faceColorValues = faceColor[faceIter];
 		int count = 0;
 		for (std::deque<int>::iterator it2 = faceValues.begin(); it2 != faceValues.end(); it2++) {
 			Kernel::Point_3 tempPoint = vertexPoints.at(*it2);
@@ -64,10 +63,10 @@ void SDFRenderer::setupRendererParameters(
 			meshData.push_back(BaryPoint.y());
 			meshData.push_back(BaryPoint.z());
 
-			meshData.push_back(faceColorValues[0] / 255.0);
-			meshData.push_back(faceColorValues[1] / 255.0);
-			meshData.push_back(faceColorValues[2] / 255.0);
-			meshData.push_back(faceColorValues[3]);
+			meshData.push_back(1.0);
+			meshData.push_back(1.0);
+			meshData.push_back(1.0);
+			meshData.push_back(1.0);
 		}
 	}
 

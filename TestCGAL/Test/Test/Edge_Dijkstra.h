@@ -16,6 +16,7 @@ public:
 
 	void compute();
 	double getAverageGeodesicDistance(vertex_iterator point);
-	std::vector<DjiElement> getNeighbors(vertex_iterator inVertext, std::map<Kernel::Point_3, double>);
+	//std::vector<DjiElement> getNeighbors(vertex_iterator inVertext, std::map<Kernel::Point_3, double>);
+	std::vector<DjiElement> getNeighbors(vertex_iterator inVertext, double cValue);
 };
 #endif 

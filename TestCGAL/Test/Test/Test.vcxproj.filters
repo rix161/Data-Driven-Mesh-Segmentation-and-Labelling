@@ -31,21 +31,24 @@
     <Filter Include="Shaders">
       <UniqueIdentifier>{714f0547-2f70-44c8-bd37-aaac4fdeb0e8}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\ShapeDiameter">
+      <UniqueIdentifier>{06b3eadf-f4e3-4207-b005-13ee32de8986}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\ShapeDiameterFunction">
+      <UniqueIdentifier>{389e8c59-eea9-4e84-846b-de493d4869da}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Geodesic">
+      <UniqueIdentifier>{ea4b5277-9139-4055-8652-b771b07ebb5b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Curvature">
+      <UniqueIdentifier>{a1de889c-829b-4af5-bff8-fc518249bda5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Curvature">
+      <UniqueIdentifier>{462b5c83-0165-462c-8120-7f97c5deba31}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Source.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="CGAL_geodesic.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Edge_Dijkstra.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Fast_Marching_Plane.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="OffWriter.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="CG_Renderer.cpp">
@@ -60,31 +63,34 @@
     <ClCompile Include="AGDRenderer.cpp">
       <Filter>Source Files\Renderer</Filter>
     </ClCompile>
+    <ClCompile Include="ShapeDiameterFunction.cpp">
+      <Filter>Source Files\ShapeDiameterFunction</Filter>
+    </ClCompile>
+    <ClCompile Include="SDFRenderer.cpp">
+      <Filter>Source Files\Renderer</Filter>
+    </ClCompile>
+    <ClCompile Include="OffWriter.cpp">
+      <Filter>Source Files\Utils</Filter>
+    </ClCompile>
+    <ClCompile Include="CGAL_geodesic.cpp">
+      <Filter>Source Files\Geodesic</Filter>
+    </ClCompile>
+    <ClCompile Include="Edge_Dijkstra.cpp">
+      <Filter>Source Files\Geodesic</Filter>
+    </ClCompile>
+    <ClCompile Include="Curvature.cpp">
+      <Filter>Source Files\Curvature</Filter>
+    </ClCompile>
+    <ClCompile Include="GenericMesh.cpp">
+      <Filter>Source Files\Utils</Filter>
+    </ClCompile>
+    <ClCompile Include="Fast_Marching_Plane.cpp">
+      <Filter>Source Files\Geodesic</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="CGAL_geodesic.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Edge_Dijkstra.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Fast_Marching_Plane.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Common_Djikstra.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="updatePriorityQueue.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Off_Writer.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="CGRenderer.h">
       <Filter>Header Files\Renderer</Filter>
-    </ClInclude>
-    <ClInclude Include="FileReader.h">
-      <Filter>Header Files\Utils</Filter>
     </ClInclude>
     <ClInclude Include="ShaderHelper.h">
       <Filter>Header Files\Utils</Filter>
@@ -92,17 +98,69 @@
     <ClInclude Include="AGDRenderer.h">
       <Filter>Header Files\Renderer</Filter>
     </ClInclude>
-    <ClInclude Include="GenericMesh.h">
-      <Filter>Header Files</Filter>
+    <ClInclude Include="ShapeDiameterFunction.h">
+      <Filter>Header Files\ShapeDiameter</Filter>
+    </ClInclude>
+    <ClInclude Include="SDFUnit.h">
+      <Filter>Header Files\ShapeDiameter</Filter>
+    </ClInclude>
+    <ClInclude Include="SDFRenderer.h">
+      <Filter>Header Files\Renderer</Filter>
     </ClInclude>
     <ClInclude Include="Transform.h">
-      <Filter>Header Files</Filter>
+      <Filter>Header Files\Renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="CGAL_geodesic.h">
+      <Filter>Header Files\Geodesic_Distance</Filter>
+    </ClInclude>
+    <ClInclude Include="Common_Djikstra.h">
+      <Filter>Header Files\Geodesic_Distance</Filter>
+    </ClInclude>
+    <ClInclude Include="Fast_Marching_Plane.h">
+      <Filter>Header Files\Geodesic_Distance</Filter>
+    </ClInclude>
+    <ClInclude Include="Edge_Dijkstra.h">
+      <Filter>Header Files\Geodesic_Distance</Filter>
+    </ClInclude>
+    <ClInclude Include="GenericMesh.h">
+      <Filter>Header Files\Utils</Filter>
+    </ClInclude>
+    <ClInclude Include="Off_Writer.h">
+      <Filter>Header Files\Utils</Filter>
+    </ClInclude>
+    <ClInclude Include="updatePriorityQueue.h">
+      <Filter>Header Files\Utils</Filter>
+    </ClInclude>
+    <ClInclude Include="Curvature.h">
+      <Filter>Header Files\Curvature</Filter>
+    </ClInclude>
+    <ClInclude Include="CurvatureUnit.h">
+      <Filter>Header Files\Curvature</Filter>
+    </ClInclude>
+    <ClInclude Include="FileReader.h">
+      <Filter>Header Files\Utils</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <None Include="AGDFragmentShader.fs" />
+    <None Include="AGDFragmentShader.fs">
+      <Filter>Shaders</Filter>
+    </None>
+    <None Include="SDFRayVertextShader.vs">
+      <Filter>Shaders</Filter>
+    </None>
+    <None Include="SDFRayFragmentShader.fs">
+      <Filter>Shaders</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
-    <Text Include="AGDVertexShader.vs" />
+    <Text Include="AGDVertexShader.vs">
+      <Filter>Shaders</Filter>
+    </Text>
+    <Text Include="SDFFragmentShader.fs">
+      <Filter>Shaders</Filter>
+    </Text>
+    <Text Include="SDFVertexShader.vs">
+      <Filter>Shaders</Filter>
+    </Text>
   </ItemGroup>
 </Project>

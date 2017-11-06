@@ -1,8 +1,12 @@
-﻿  CGAL_geodesic.cpp
-  Edge_Dijkstra.cpp
-  Fast_Marching_Plane.cpp
-Fast_Marching_Plane.cpp(21): warning C4018: '<': signed/unsigned mismatch
-Fast_Marching_Plane.cpp(73): warning C4244: 'initializing': conversion from 'double' to 'int', possible loss of data
-  OffWriter.cpp
+﻿  Curvature.cpp
+Curvature.cpp(84): warning C4244: 'argument': conversion from 'double' to 'int', possible loss of data
+Curvature.cpp(85): warning C4244: 'argument': conversion from 'double' to 'int', possible loss of data
   Source.cpp
-LINK : fatal error LNK1104: cannot open file 'CGAL-vc140-mt-4.11.lib'
+Source.cpp(23): warning C4101: 'seconds': unreferenced local variable
+  Generating code
+  10 of 3431 functions ( 0.3%) were compiled, the rest were copied from previous compilation.
+    1 functions were new in current compilation
+    49 functions had inline decision re-evaluated but remain unchanged
+  Finished generating code
+  Test.vcxproj -> F:\Masters\SemI\Computer Graphics\TestCGAL\Test\Release\Test.exe
+  Test.vcxproj -> F:\Masters\SemI\Computer Graphics\TestCGAL\Test\Release\Test.pdb (Full PDB)

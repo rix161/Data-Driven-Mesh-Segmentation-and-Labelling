@@ -30,6 +30,7 @@ public:
 		mEdgeCount = eCount;
 	}
 
+	void crunchMesh();
 	std::vector<Kernel::Point_3> getVertexIndex() { return vertexIndex; };
 	std::vector<std::vector<int>> getVertexColor() { return vectexColor; }
 	std::vector<std::deque<int>> getFaceIndex() { return faceIndex; }

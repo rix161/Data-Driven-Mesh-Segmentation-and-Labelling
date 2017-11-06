@@ -3,24 +3,54 @@
 #include<glm/gtx/vector_angle.hpp>
 
 
+void ShapeDiameterFunction::optidoesIntersect(
+	face_iterator triangleFace,
+	Kernel::Point_3 source,
+	Kernel::Vector_3 rayDirection,
+	std::vector<Kernel::Point_3> triangleVertices,
+	std::vector<SDFUnit> &sdfUnits) {
+
+	double threshold = 1e-8;
+
+	//std::cout << "Vec1:" << triangleVertices[0] << " Vec2:" << triangleVertices[1] << " Vec3:" << triangleVertices[2]<<std::endl;
+	Kernel::Vector_3 vecBA = triangleVertices[1] - triangleVertices[0];
+	Kernel::Vector_3 vecCA = triangleVertices[2] - triangleVertices[0];
+	Kernel::Vector_3 vecP = CGAL::cross_product(rayDirection, vecCA);
+	double det = vecBA * vecP;
+	if (det > threshold && det < threshold)
+		return;
+
+	double invDet = 1 / det;
+
+	Kernel::Vector_3 vecT = source - triangleVertices[0];
+	double parameterU = vecT*vecP*invDet;
+	if (parameterU < 0 || parameterU >1) return;
+
+	Kernel::Vector_3 vecQ = CGAL::cross_product(vecT, vecBA);
+	double parameterV = rayDirection*vecQ*invDet;
+	if (parameterV < 0 || parameterV>1) return;
+
+	//compute Intersection Point
+	double parameterT = vecCA*vecQ*invDet;
+	if (parameterT > threshold) {
+		this->mMutex.lock();
+		sdfUnits.push_back(SDFUnit(triangleFace, source, source + parameterT*rayDirection, glm::vec3(1.0, 0.0, 0.0)));
+		this->mMutex.unlock();
+		return;
+	}
+
+	return;
+}
+
 bool ShapeDiameterFunction::doesInterset(
 	Kernel::Point_3 source,
-	Kernel::Vector_3 direction,
-	face_iterator intersectTriangle,
-	Triangle_mesh mesh,
+	Kernel::Vector_3 rayDirection,
+	std::vector<Kernel::Point_3> triangleVertices,
 	Kernel::Point_3 &intersectionPoint) {
 	//Implementation of Möller–Trumbore intersection algorithm
 
-	std::vector<Kernel::Point_3> triangleVertices;
-	Kernel::Vector_3 rayDirection = direction;
 	double threshold = 1e-8;
 
-	CGAL::Vertex_around_face_iterator<Triangle_mesh> vbegin, vend;
-	for (boost::tie(vbegin, vend) = CGAL::vertices_around_face(mesh.halfedge(*intersectTriangle), mesh);
-		vbegin != vend; vbegin++) {
-		triangleVertices.push_back(mesh.point((*vbegin)));
-	}
-	
 	//std::cout << "Vec1:" << triangleVertices[0] << " Vec2:" << triangleVertices[1] << " Vec3:" << triangleVertices[2]<<std::endl;
 	Kernel::Vector_3 vecBA = triangleVertices[1] - triangleVertices[0];
 	Kernel::Vector_3 vecCA = triangleVertices[2] - triangleVertices[0];
@@ -37,7 +67,7 @@ bool ShapeDiameterFunction::doesInterset(
 
 	Kernel::Vector_3 vecQ = CGAL::cross_product(vecT, vecBA);
 	double parameterV = rayDirection*vecQ*invDet;
-	if (parameterV < 0 || parameterV>1) return false;
+	if (parameterV < 0 || parameterU+parameterV>1) return false;
 	
 	//compute Intersection Point
 	double parameterT = vecCA*vecQ*invDet;
@@ -79,6 +109,7 @@ std::vector<Kernel::Vector_3> ShapeDiameterFunction::buildRays(glm::vec3 normal,
 	return rays;
 }
 
+
 std::vector<SDFUnit> ShapeDiameterFunction::compute(Triangle_mesh mesh, face_iterator face, float coneAngle, int rayCount) {
 
 	std::vector<Kernel::Point_3> faceVertices;
@@ -99,19 +130,25 @@ std::vector<SDFUnit> ShapeDiameterFunction::compute(Triangle_mesh mesh, face_ite
 	//std::cout << "FaceNormal:" << faceNormal << "FaceCenter" << faceCenter << std::endl;
 	glm::vec3 rotVec = glm::vec3(faceNormal.x(), faceNormal.y(), faceNormal.z());
 	std::vector<Kernel::Vector_3> rays = buildRays(rotVec, rayCount, coneAngle);
-	std::cout << " Normal:" << faceNormal << " Ray[0]:" << rays[0] << " Compare:" << (faceNormal == rays[0]);
+	//std::cout << " Normal:" << faceNormal << " Ray[0]:" << rays[0] << " Compare:" << (faceNormal == rays[0]);
 
 	int faceCount = 0;
 	for (face_iterator fIter = mesh.faces_begin(); fIter != mesh.faces_end(); fIter++) {
-		std::cout << " FaceCount:" << faceCount++ << std::endl;
+		std::vector<Kernel::Point_3> triangleVertices;
+		CGAL::Vertex_around_face_iterator<Triangle_mesh> vbegin, vend;
+		for (boost::tie(vbegin, vend) = CGAL::vertices_around_face(mesh.halfedge(*fIter), mesh);
+			vbegin != vend; vbegin++) {
+			triangleVertices.push_back(mesh.point((*vbegin)));
+		}
 		for (Kernel::Vector_3 ray : rays) {
 			Kernel::Point_3 interPoint(0, 0, 0);
-			if (doesInterset(faceCenter, ray, fIter,mesh,interPoint)) {
+			if (doesInterset(faceCenter, ray, triangleVertices,interPoint)) {
 				if(ray == faceNormal)
 					sdfData.push_back(SDFUnit(fIter, faceCenter, interPoint, glm::vec3(1.0, 0.0, 0.0)));
 				else
 					sdfData.push_back(SDFUnit(fIter, faceCenter, interPoint, lineColor));
 			}
+			
 		}
 	}
 
