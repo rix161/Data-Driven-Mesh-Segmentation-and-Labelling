@@ -2,12 +2,12 @@
 #define __SHAPE_DIAMETER_FUNCTION__
 #include "CGAL_geodesic.h"
 #include "SDFUnit.h"
+#include "GenericMesh.h"
 #include <vector>
-#include <thread>
-#include <future>
-#include <mutex> 
+#include <iostream>
+#include <fstream>
 
-class ShapeDiameterFunction{
+class ShapeDiameterFunction:public GenericMesh{
 
 protected:
 
@@ -25,11 +25,18 @@ protected:
 		std::vector<Kernel::Point_3> triangleFaces,
 		std::vector<SDFUnit> &sdfUnits);
 
-	std::vector<SDFUnit> computeIntersection(std::vector<Kernel::Vector_3> rays);
-	std::mutex mMutex;
+	std::vector<SDFUnit> computeIntersection(Kernel::Point_3 faceCenter, Kernel::Vector_3 faceNormal, std::vector<Kernel::Vector_3> rays);
 
 public:
-	std::vector<SDFUnit> compute(Triangle_mesh mesh, face_iterator face, float coneAngle, int rayCount);
+
+	ShapeDiameterFunction(const char* fileName) {
+		std::ifstream in(fileName);
+		in >> this->mMainMesh;
+		std::cout << mMainMesh.number_of_vertices() << std::endl;
+		in.close();
+	}
+
+	std::vector<SDFUnit> compute(face_iterator face, float coneAngle, int rayCount);
 };
 
 

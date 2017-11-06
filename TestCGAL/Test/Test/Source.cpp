@@ -10,6 +10,7 @@
 #include "SDFRenderer.h"
 #include "SDFUnit.h"
 #include "Curvature.h"
+#include "VIS.h"
 
 #include <ctime>
 #include <chrono>
@@ -21,6 +22,7 @@ int main(int argc, char** argv)
 	std::chrono::system_clock::time_point start;
 
 	double seconds;
+	const char* fileName = "F:\\Masters\\SemI\\Computer Graphics\\Input Meshes\\offFiles\\TestModels\\mushroom.off";
 
 	/*Curvature cMesh("F:\\Masters\\SemI\\Computer Graphics\\Input Meshes\\PaperData\\labeledDb\\LabeledDB_new\\Bearing\\mushroom.off");
 	cMesh.crunchMesh();
@@ -33,21 +35,25 @@ int main(int argc, char** argv)
 		cMesh);*/
 
 	Triangle_mesh tmesh2;
-	std::ifstream in2("F:\\Masters\\SemI\\Computer Graphics\\Input Meshes\\PaperData\\labeledDb\\LabeledDB_new\\Bearing\\mushroom.off");
+	std::ifstream in2(fileName);
 	in2 >> tmesh2;
 	in2.close();
 
 	OffWriter writter;
-	GenericMesh mesh = writter.ReadFile("F:\\Masters\\SemI\\Computer Graphics\\Input Meshes\\PaperData\\labeledDb\\LabeledDB_new\\Bearing\\mushroom.off");
+	GenericMesh mesh = writter.ReadFile(fileName);
 
-
-	ShapeDiameterFunction sdf;
+	ShapeDiameterFunction sdf(fileName);
+	sdf.crunchMesh();
 	int randnum = rand() % (mesh.getFaceCount() + 1);
 	randnum = rand() % (mesh.getFaceCount() + 1);
 	randnum = rand() % (mesh.getFaceCount() + 1);
 	face_iterator iter = tmesh2.faces_begin();
 	std::advance(iter, randnum);
-	std::vector<SDFUnit> rays = sdf.compute(tmesh2, iter, 60, 30);
+	std::vector<SDFUnit> rays = sdf.compute(iter, 60, 30);
+
+	VIS vis(fileName);
+	vis.crunchMesh();
+	std::vector<SDFUnit> rays2 = vis.computeFaceVIS(iter, 50);
 
 	SDFRenderer myRenderer(argc, argv, 1024, 1024, "SDFRenderer");
 
@@ -56,8 +62,8 @@ int main(int argc, char** argv)
 		"F:\\Masters\\SemI\\Computer Graphics\\TestCGAL\\Test\\Test\\SDFFragmentShader.fs",
 		"F:\\Masters\\SemI\\Computer Graphics\\TestCGAL\\Test\\Test\\SDFRayVertextShader.vs",
 		"F:\\Masters\\SemI\\Computer Graphics\\TestCGAL\\Test\\Test\\SDFRayFragmentShader.fs",
-		mesh,
-		rays);
+		vis,
+		rays2);
 
 
 	glutMainLoop();

@@ -3,9 +3,9 @@
 #include "ShapeDiameterFunction.h"
 class VIS :public ShapeDiameterFunction {
 public:
-	std::vector<SDFUnit> computeMeshVIS(Triangle_mesh mesh, float coneAngle, int rayCount);
-	std::vector<SDFUnit> computeFaceVIS(Triangle_mesh mesh, face_iterator face, float coneAngle, int rayCount);
-
+	VIS(const char* fileName):ShapeDiameterFunction(fileName) {}
+	std::vector<SDFUnit> computeMeshVIS(int rayCount);
+	std::vector<SDFUnit> computeFaceVIS(face_iterator face,int rayCount);
 };
 
 #endif

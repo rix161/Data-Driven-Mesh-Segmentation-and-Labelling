@@ -24,6 +24,7 @@ public:
 	Kernel::Point_3 getEndPoint() { return mEndPoint;}
 	double getLineLength() { return sqrt((mEndPoint - mStartPoint).squared_length()); }
 	glm::vec3 getColor() { return mLineColor; }
+	void setColor(glm::vec3 color) { this->mLineColor = color; }
 };
 
 #endif
