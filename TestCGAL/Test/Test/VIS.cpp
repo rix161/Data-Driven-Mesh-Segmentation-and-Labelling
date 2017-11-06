@@ -17,7 +17,7 @@ std::vector<SDFUnit> VIS::computeFaceVIS(face_iterator face, int rayCount) {
 		 }
 	 }
 	 Kernel::Point_3 midPoint = CGAL::midpoint(maxUnit.getEndPoint(), maxUnit.getStartPoint());
-	 std::vector<Kernel::Vector_3> rays2 = buildRays(glm::vec3(0.0,1.0,0.0), rayCount*2, 180,true);
+	 std::vector<Kernel::Vector_3> rays2 = buildRays(glm::vec3(0.0,1.0,0.0), rayCount, 180,true);
 	 std::vector<SDFUnit> rays3 = computeIntersection(midPoint, Kernel::Vector_3(0.0, 1.0, 0.0), rays2,true);
 	 maxUnit.setColor(glm::vec3(0, 0, 1.0));
 	 rays3.push_back(maxUnit);

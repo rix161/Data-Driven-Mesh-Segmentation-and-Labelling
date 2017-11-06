@@ -51,9 +51,9 @@ int main(int argc, char** argv)
 	face_iterator iter = tmesh2.faces_begin();
 	std::advance(iter, randnum);
 
-	/*ShapeDiameterFunction sdf(fileName);
+	ShapeDiameterFunction sdf(fileName);
 	sdf.crunchMesh();
-	std::vector<SDFUnit> rays = sdf.compute(iter, 60, 30);*/
+	std::vector<SDFUnit> rays = sdf.compute(iter, 60, 30);
 
 	VIS vis(fileName);
 	vis.crunchMesh();
@@ -66,8 +66,8 @@ int main(int argc, char** argv)
 		"F:\\Masters\\SemI\\Computer Graphics\\TestCGAL\\Test\\Test\\SDFFragmentShader.fs",
 		"F:\\Masters\\SemI\\Computer Graphics\\TestCGAL\\Test\\Test\\SDFRayVertextShader.vs",
 		"F:\\Masters\\SemI\\Computer Graphics\\TestCGAL\\Test\\Test\\SDFRayFragmentShader.fs",
-		vis,
-		rays2);
+		sdf,
+		rays);
 
 
 	glutMainLoop();
