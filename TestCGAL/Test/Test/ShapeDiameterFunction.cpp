@@ -33,7 +33,7 @@ void ShapeDiameterFunction::optidoesIntersect(
 	//compute Intersection Point
 	double parameterT = vecCA*vecQ*invDet;
 	if (parameterT > threshold) {
-		sdfUnits.push_back(SDFUnit(triangleFace, source, source + parameterT*rayDirection, glm::vec3(1.0, 0.0, 0.0)));
+		//sdfUnits.push_back(SDFUnit(triangleFace, source, source + parameterT*rayDirection, glm::vec3(1.0, 0.0, 0.0)));
 		return;
 	}
 
@@ -97,6 +97,7 @@ std::vector<Kernel::Vector_3> ShapeDiameterFunction::buildRays(glm::vec3 normal,
 			normal = degAngle < 0 ? normal*-1.0f:normal;
 		//std::cout << "DegAngle:" << degAngle<<std::endl;
 		glm::vec3 temp = glm::rotate(normal, glm::radians(degAngle), glm::vec3(RandomNumber(0,1), RandomNumber(0, 1), RandomNumber(0, 1)));
+		//std::cout << "Angle B/w vectors1:" << glm::degrees(glm::angle(temp, normal)) << std::endl;
 		/*glm::vec3 temp2 = glm::rotate(normal, degAngle, glm::vec3(1, 0, 0));
 		std::cout << "Angle B/w vectors1:" << glm::degrees(glm::angle(temp, normal)) << std::endl;
 		std::cout << "Angle B/w vectors2:" << glm::angle(temp2, normal)<< std::endl;*/
@@ -130,14 +131,17 @@ std::vector<SDFUnit> ShapeDiameterFunction::computeIntersection(Kernel::Point_3 
 			}
 			
 			if (doesInterset(faceCenter, ray, triangleVertices, interPoint)) {
-				if (CGAL::squared_distance(faceCenter, interPoint) < minRayLen) {
+				double dist = CGAL::squared_distance(faceCenter, interPoint);
+				if (dist < minRayLen) {
 					minInterPoint = interPoint;
-					minRayLen = CGAL::squared_distance(faceCenter, interPoint);
+					minRayLen = dist;
 					minIter = fIter;
 				}
 			}
 		}
-		sdfData.push_back(SDFUnit(minIter, faceCenter, minInterPoint, glm::vec3(0, 1, 0)));
+		glm::vec3 rotVec = glm::vec3(faceNormal.x(), faceNormal.y(), faceNormal.z());
+		glm::vec3 rayVec = glm::vec3(ray.x(), ray.y(), ray.z());
+		sdfData.push_back(SDFUnit(minIter, faceCenter, minInterPoint, glm::vec3(0, 1, 0), glm::degrees(glm::angle(rayVec, rotVec))));
 	}
 	return sdfData;
 
@@ -157,11 +161,9 @@ std::vector<SDFUnit> ShapeDiameterFunction::compute(face_iterator face, float co
 
 	if (faceVertices.size() != 3) return sdfData;
 
-	Kernel::Vector_3 faceNormal = CGAL::normal(faceVertices[0], faceVertices[1], faceVertices[2]);
-	faceNormal = faceNormal*-1;
+	Kernel::Vector_3 faceNormal = CGAL::normal(faceVertices[0], faceVertices[1], faceVertices[2])*-1;
 	Kernel::Point_3 faceCenter = CGAL::centroid(faceVertices[0], faceVertices[1], faceVertices[2]);
-	glm::vec3 rotVec = glm::vec3(faceNormal.x(), faceNormal.y(), faceNormal.z());
-	std::vector<Kernel::Vector_3> rays = buildRays(rotVec, rayCount, coneAngle);
+	std::vector<Kernel::Vector_3> rays = buildRays(glm::vec3(faceNormal.x(), faceNormal.y(), faceNormal.z()), rayCount, coneAngle);
 
 	return computeIntersection(faceCenter, faceNormal,rays);
 }

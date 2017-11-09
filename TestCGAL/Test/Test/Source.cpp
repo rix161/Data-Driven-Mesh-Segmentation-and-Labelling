@@ -11,6 +11,7 @@
 #include "SDFUnit.h"
 #include "Curvature.h"
 #include "VIS.h"
+#include <Eigen/Dense>
 
 #include <ctime>
 #include <chrono>
@@ -23,19 +24,19 @@ int main(int argc, char** argv)
 
 	double seconds;
 	//const char* fileName = "F:\\Masters\\SemI\\Computer Graphics\\Input Meshes\\PaperData\\labeledDb\\LabeledDB_new\\Bearing\\354.off";
-	const char* fileName = "F:\\Masters\\SemI\\Computer Graphics\\Input Meshes\\offFiles\\TestModels\\Apple.off";
+	const char* fileName = "F:\\Masters\\SemI\\Computer Graphics\\Input Meshes\\offFiles\\TestModels\\cube.off";
 
-	/*Curvature cMesh("F:\\Masters\\SemI\\Computer Graphics\\Input Meshes\\PaperData\\labeledDb\\LabeledDB_new\\Bearing\\mushroom.off");
+	Curvature cMesh(fileName);
 	cMesh.crunchMesh();
-	cMesh.computeMeshCurvature();
+	cMesh.computeMeshCurvature2();
 	
-	AGDRenderer myRenderer(argc, argv, 1024, 1024, "AGDRenderer");
+	/*AGDRenderer myRenderer(argc, argv, 1024, 1024, "AGDRenderer");
 	myRenderer.setupRendererParameters(
 		"F:\\Masters\\SemI\\Computer Graphics\\TestCGAL\\Test\\Test\\AGDVertexShader.vs",
 		"F:\\Masters\\SemI\\Computer Graphics\\TestCGAL\\Test\\Test\\AGDFragmentShader.fs",
 		cMesh);*/
 
-	Triangle_mesh tmesh2;
+	/*Triangle_mesh tmesh2;
 	std::ifstream in2(fileName);
 	in2 >> tmesh2;
 	in2.close();
@@ -57,7 +58,7 @@ int main(int argc, char** argv)
 
 	VIS vis(fileName);
 	vis.crunchMesh();
-	std::vector<SDFUnit> rays2 = vis.computeFaceVIS(iter, 30);
+	std::pair<std::vector<SDFUnit>, std::vector<SDFUnit>> rays2 = vis.computeFaceVIS(iter,30,2);
 
 	SDFRenderer myRenderer(argc, argv, 1024, 1024, "SDFRenderer");
 
@@ -66,11 +67,17 @@ int main(int argc, char** argv)
 		"F:\\Masters\\SemI\\Computer Graphics\\TestCGAL\\Test\\Test\\SDFFragmentShader.fs",
 		"F:\\Masters\\SemI\\Computer Graphics\\TestCGAL\\Test\\Test\\SDFRayVertextShader.vs",
 		"F:\\Masters\\SemI\\Computer Graphics\\TestCGAL\\Test\\Test\\SDFRayFragmentShader.fs",
-		sdf,
-		rays);
+		vis,
+		rays2.second);
 
 
 	glutMainLoop();
+
+	VIS vis(fileName);
+	vis.crunchMesh();
+	vis.generateFeatures("F:\\Masters\\SemI\\Computer Graphics\\Input Meshes\\PaperData\\labeledDb_features\\Bearing\\354_sdf.txt", "F:\\Masters\\SemI\\Computer Graphics\\Input Meshes\\PaperData\\labeledDb_features\\Bearing\\354_vis.txt",);
+	*/
+	
 
 	return 0;
 } 

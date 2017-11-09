@@ -1,5 +1,7 @@
 #include "Curvature.h"
 #include "CurvatureUnit.h"
+#include <glm/gtx/rotate_vector.hpp>
+#include <glm/gtx/vector_angle.hpp>
 
 Curvature::Curvature(const char* fileName) {
 	std::ifstream in(fileName);
@@ -7,6 +9,154 @@ Curvature::Curvature(const char* fileName) {
 	std::cout<<mMainMesh.number_of_vertices() << std::endl;
 	in.close();
 }
+
+
+void Curvature::computeMeshCurvature2() {
+
+	//TBD!!!!!
+	std::vector<double> areas(mMainMesh.number_of_vertices());
+	std::vector<Kernel::Vector_3> coord(mMainMesh.number_of_vertices());
+	std::vector<Kernel::Vector_3> normals(mMainMesh.number_of_vertices());
+	std::vector<double> kMean(mMainMesh.number_of_vertices());
+	std::vector<double> kGauss(mMainMesh.number_of_vertices());
+	std::map<Kernel::Point_3,CGAL::SM_Vertex_index> vertexMap;
+
+	double PI2 = 3.14;
+	for (int i = 0; i < mMainMesh.number_of_vertices(); i++) {
+		areas[i] = 0.0;
+		kMean[i] = 0.0;
+		kGauss[i] = PI2;
+		coord[i] = Kernel::Vector_3(0, 0, 0);
+	}
+
+	for (face_iterator fIter = mMainMesh.faces_begin(); fIter != mMainMesh.faces_end(); fIter++) {
+		std::vector<Kernel::Point_3> faceVertices;
+		float angle0, angle1, angle2;
+
+		CGAL::Vertex_around_face_iterator<Triangle_mesh> vbegin, vend;
+		for (boost::tie(vbegin, vend) = CGAL::vertices_around_face(mMainMesh.halfedge(*fIter), mMainMesh);
+			vbegin != vend; vbegin++) {
+			faceVertices.push_back(mMainMesh.point((*vbegin)));
+			vertexMap.insert(std::pair<Kernel::Point_3, CGAL::SM_Vertex_index>(mMainMesh.point(*vbegin), (*vbegin)));
+		}
+
+		Kernel::Vector_3 vec1 = faceVertices[1] - faceVertices[0];
+		Kernel::Vector_3 vec2 = faceVertices[2] - faceVertices[0];
+		Kernel::Vector_3 vec3 = faceVertices[0] - faceVertices[1];
+		Kernel::Vector_3 vec4 = faceVertices[2] - faceVertices[1];
+
+		angle0 = glm::angle(glm::normalize(glm::vec3(vec1[0], vec1[1], vec1[2])), glm::normalize(glm::vec3(vec2[0], vec2[1], vec2[2])));
+		angle1 = glm::angle(glm::normalize(glm::vec3(vec3[0], vec3[1], vec3[2])), glm::normalize(glm::vec3(vec4[0], vec4[1], vec4[2])));
+		angle2 = PI2 - (angle0 + angle1);
+		Kernel::Vector_3 normal = CGAL::normal(faceVertices[0], faceVertices[1], faceVertices[2]);
+		normals[vertexMap[faceVertices[0]]] = normal;
+		normals[vertexMap[faceVertices[1]]] = normal;
+		normals[vertexMap[faceVertices[2]]] = normal;
+
+		if (angle0 < (PI2 / 2) && angle1 < (PI2 / 2) && angle2 < (PI2 / 2)) {
+			double e0 = CGAL::squared_distance(faceVertices[1], faceVertices[0]);
+			double e1 = CGAL::squared_distance(faceVertices[2], faceVertices[1]);
+			double e2= CGAL::squared_distance(faceVertices[0], faceVertices[2]);
+
+			float area0, area1, area2;
+
+			areas[vertexMap[faceVertices[0]]] += (e2*(1 / tan(angle1)) + e0*(1 / tan(angle2))) / 8.0;
+			areas[vertexMap[faceVertices[1]]] += (e0*(1 / tan(angle2)) + e1*(1 / tan(angle0))) / 8.0;
+			areas[vertexMap[faceVertices[2]]] += (e1*(1 / tan(angle0)) + e2*(1 / tan(angle1))) / 8.0;
+
+			/*areas[vertexMap[faceVertices[0]]] += area0;
+			areas[vertexMap[faceVertices[1]]] += area1;
+			areas[vertexMap[faceVertices[2]]] += area2;	*/	
+		}
+		else {
+			double area = sqrt(CGAL::squared_area(faceVertices[0], faceVertices[1], faceVertices[2]));
+			if (angle0 >= (PI2 / 2)) {
+				areas[vertexMap[faceVertices[0]]] = area / 2;
+				areas[vertexMap[faceVertices[1]]] = area / 4;
+				areas[vertexMap[faceVertices[2]]] = area / 4;
+			
+			}
+			else if(angle1 >= (PI2 / 2)){
+				areas[vertexMap[faceVertices[0]]] = area / 4;
+				areas[vertexMap[faceVertices[1]]] = area / 2;
+				areas[vertexMap[faceVertices[2]]] = area / 4;
+			}
+			else {
+				areas[vertexMap[faceVertices[0]]] = area / 4;
+				areas[vertexMap[faceVertices[1]]] = area / 4;
+				areas[vertexMap[faceVertices[2]]] = area / 2;
+			}
+		}
+	}
+
+
+	for (face_iterator fIter = mMainMesh.faces_begin(); fIter != mMainMesh.faces_end(); fIter++) {
+		std::vector<Kernel::Point_3> faceVertices;
+		float angle0, angle1, angle2;
+
+		CGAL::Vertex_around_face_iterator<Triangle_mesh> vbegin, vend;
+		for (boost::tie(vbegin, vend) = CGAL::vertices_around_face(mMainMesh.halfedge(*fIter), mMainMesh);
+			vbegin != vend; vbegin++) {
+			faceVertices.push_back(mMainMesh.point((*vbegin)));
+		}
+		Kernel::Vector_3 vec1 = faceVertices[1] - faceVertices[0];
+		Kernel::Vector_3 vec2 = faceVertices[2] - faceVertices[0];
+		Kernel::Vector_3 vec3 = faceVertices[0] - faceVertices[1];
+		Kernel::Vector_3 vec4 = faceVertices[2] - faceVertices[1];
+
+		angle0 = glm::angle(glm::normalize(glm::vec3(vec1[0], vec1[1], vec1[2])), glm::normalize(glm::vec3(vec2[0], vec2[1], vec2[2])));
+		angle1 = glm::angle(glm::normalize(glm::vec3(vec3[0], vec3[1], vec3[2])), glm::normalize(glm::vec3(vec4[0], vec4[1], vec4[2])));
+		angle2 = PI2 - (angle0 + angle1);
+
+		/*angle0 = CGAL::angle(faceVertices[1] - faceVertices[0], faceVertices[2] - faceVertices[0]);
+		angle1 = CGAL::angle(faceVertices[0] - faceVertices[1], faceVertices[2] - faceVertices[1]);
+		angle2 = PI2 - (angle0 + angle1);*/
+
+		Kernel::Vector_3 e0 = faceVertices[1] - faceVertices[0];
+		Kernel::Vector_3 e1 = faceVertices[2] - faceVertices[1];
+		Kernel::Vector_3 e2 = faceVertices[0] - faceVertices[2];
+	
+		if (angle0 == 0 || angle1 == 0 || angle2 == 0) continue;
+
+		coord[vertexMap[faceVertices[0]]] += (e2*(1 / tan(angle1)) + e0*(1 / tan(angle2))) / 4.0;
+		coord[vertexMap[faceVertices[1]]] += (e0*(1 / tan(angle2)) + e1*(1 / tan(angle0))) / 4.0;
+		coord[vertexMap[faceVertices[2]]] += (e1*(1 / tan(angle0)) + e2*(1 / tan(angle1))) / 4.0;
+
+		kGauss[vertexMap[faceVertices[0]]] -= angle0;
+		kGauss[vertexMap[faceVertices[1]]] -= angle1;
+		kGauss[vertexMap[faceVertices[2]]] -= angle2;
+
+		CGAL::Edge_around_face_iterator<Triangle_mesh> hbegin,hend;
+		for (boost::tie(hbegin, hend) = CGAL::edges_around_face(mMainMesh.halfedge(*fIter), mMainMesh);
+			hbegin != hend; hbegin++) {
+
+			if (mMainMesh.is_border(*hbegin)) {
+				Kernel::Vector_3 p1 = mMainMesh.point(mMainMesh.vertex(*hbegin, 1)) - mMainMesh.point(mMainMesh.vertex(*hbegin, 0));
+				hbegin++;
+				Kernel::Vector_3 p2 = mMainMesh.point(mMainMesh.vertex(*hbegin, 1)) - mMainMesh.point(mMainMesh.vertex(*hbegin, 0));
+				kGauss[vertexMap[mMainMesh.point(mMainMesh.vertex(*hbegin, 0))]] -= p1*p2;
+				kGauss[vertexMap[mMainMesh.point(mMainMesh.vertex(*hbegin, 1))]] -= p1*p2;
+			}
+		}
+	}
+
+	for (vertex_iterator vi = mMainMesh.vertices_begin(); vi != mMainMesh.vertices_end(); vi++) {
+		
+		Kernel::Point_3 p = mMainMesh.point(*vi);
+		int value = vertexMap[p];
+		kMean[value] = (((normals[value] * coord[value]) > 0 ? 1.0 : -1)*(coord[value]/areas[value])).squared_length();
+		kGauss[value] /= areas[value];
+	}
+	for (double kMeanVal : kMean)
+		std::cout << kMeanVal << "\t";
+	std::cout << "\n";
+	
+	for (double kGaussVal : kGauss)
+		std::cout << kGaussVal << "\t";
+	std::cout << "\n";
+}
+
+
 void Curvature::computeBaryCenteric(Kernel::Point_3 facePoint, Kernel::Vector_3 faceNormal, std::vector<Kernel::Point_3> faceVertices, double &baryA, double &baryB, double &baryC) {
 	
 	double area1 = faceNormal * CGAL::cross_product(faceVertices[1] - faceVertices[0], faceVertices[2] - faceVertices[0]);
@@ -17,7 +167,24 @@ void Curvature::computeBaryCenteric(Kernel::Point_3 facePoint, Kernel::Vector_3 
 	baryB = area3 / area1;
 	baryC = 1.0 - baryA - baryB;
 }
+void Curvature::buildNRings(face_iterator fIter, std::set<Kernel::Point_3> &nRing, int n) {
+	if (n == 0)
+		return;
 
+	CGAL::Vertex_around_face_iterator<Triangle_mesh> vbegin, vend;
+	for (boost::tie(vbegin, vend) = CGAL::vertices_around_face(mMainMesh.halfedge(*fIter), mMainMesh);
+		vbegin != vend; vbegin++) {
+		nRing.insert(mMainMesh.point((*vbegin)));
+	}
+
+	CGAL::Face_around_face_iterator<Triangle_mesh> fbegin, fend;
+	for (boost::tie(fbegin, fend) = CGAL::faces_around_face(mMainMesh.halfedge(*fIter), mMainMesh);
+		fbegin != fend; fbegin++) {
+		face_iterator iter = mMainMesh.faces_begin();
+		std::advance(iter, (*fbegin));
+		buildNRings(iter, nRing, n - 1);
+	}
+}
 CurvatureUnit Curvature::computeFaceCurvature(face_iterator faceIter) {
 	std::vector<Kernel::Point_3> faceVertices;
 	std::vector<CurvatureUnit> results;
@@ -35,9 +202,12 @@ CurvatureUnit Curvature::computeFaceCurvature(face_iterator faceIter) {
 	Kernel::Vector_3 vBC = faceVertices[2] - faceVertices[1];
 	Kernel::Vector_3 vCA = faceVertices[0] - faceVertices[2];
 
-	Kernel::Vector_3 nA = CGAL::cross_product(vAB, vCA);
+	Kernel::Vector_3 nA = (CGAL::cross_product(vAB, vCA));
+	nA = nA / sqrt(nA.squared_length());
 	Kernel::Vector_3 nB = CGAL::cross_product(vAB, vBC);
+	nB = nB / sqrt(nA.squared_length());
 	Kernel::Vector_3 nC = CGAL::cross_product(vBC, vCA);
+	nC = nC / sqrt(nA.squared_length());
 	
 	double baryA, baryB, baryC;
 
@@ -63,7 +233,32 @@ CurvatureUnit Curvature::computeFaceCurvature(face_iterator faceIter) {
 	double c1 = (nB - nA)*(faceVertices[1] - faceVertices[0]) / (faceVertices[1] - faceVertices[0]).squared_length();
 	double c2 = (nC - nB)*(faceVertices[2] - faceVertices[1]) / (faceVertices[2] - faceVertices[1]).squared_length();
 	double c3 = (nA - nC)*(faceVertices[0] - faceVertices[2]) / (faceVertices[0] - faceVertices[2]).squared_length();
-	std::cout << " GC:" << gaussianCurve << " meanCurve:" << meanCurve << " k1:" << k1 << " k2:" << k2 << " c1:" << c1 << " c2:" << c2 << " c3:" << c3 << std::endl;
+	std::cout << " M1: GC:" << gaussianCurve << " meanCurve:" << meanCurve << " k1:" << k1 << " k2:" << k2 << " c1:" << c1 << " c2:" << c2 << " c3:" << c3 << std::endl;
+
+	///Method2 
+	
+	/*faceVertices.clear();
+	std::set<Kernel::Point_3> NRing;
+
+	buildNRings(faceIter, NRing, 2);
+	Eigen::MatrixXd  P(NRing.size(), 3);
+	int i = 0;
+	for (Kernel::Point_3 point : NRing) {
+		P(i, 0) = point.x();
+		P(i, 1) = point.y();
+		P(i, 2) = point.z();
+		i++;
+	}
+	
+	Eigen::MatrixXd  PT = P.transpose();
+	Eigen::MatrixXd temp = P*PT;
+	Eigen::SelfAdjointEigenSolver<Eigen::MatrixXd> eigensolver(temp);
+	if (eigensolver.info() != Eigen::Success) std::cout<<"ERROR";
+	Eigen::VectorXd eVal= eigensolver.eigenvalues();
+	Eigen::MatrixXd eVecs = eigensolver.eigenvectors();
+	std::cout << "eVal:" << eVal << std::endl;
+	std::cout << "eVecs:" << eVecs << std::endl;*/
+
 
 	CurvatureUnit cUnit(faceIter, gaussianCurve, meanCurve, k1, k2);
 	return cUnit;
@@ -104,7 +299,6 @@ void Curvature::computeMeshCurvature() {
 	std::cout << "Max:" << max << "Min:" << min<<std::endl;
 	int count = 0;
 	for (CurvatureUnit unit : mCurves) {
-		
 		int binNum = unit.getMCurve() < 0 ? 0 : 1;
 		std::vector<int> colorVec = colorBin[binNum];
 		unit.setColor(colorVec);
