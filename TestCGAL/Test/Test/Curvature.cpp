@@ -8,10 +8,11 @@ Curvature::Curvature(const char* fileName) {
 	in >> this->mMainMesh;
 	std::cout<<mMainMesh.number_of_vertices() << std::endl;
 	in.close();
+	this->setInterpolate(true);
 }
 
 
-void Curvature::computeMeshCurvature2() {
+std::vector<CurvatureUnit> Curvature::computeMeshCurvature2() {
 
 	//TBD!!!!!
 	std::vector<double> areas(mMainMesh.number_of_vertices());
@@ -20,12 +21,13 @@ void Curvature::computeMeshCurvature2() {
 	std::vector<double> kMean(mMainMesh.number_of_vertices());
 	std::vector<double> kGauss(mMainMesh.number_of_vertices());
 	std::map<Kernel::Point_3,CGAL::SM_Vertex_index> vertexMap;
+	std::vector<CurvatureUnit> results;
 
 	double PI2 = 3.14;
 	for (int i = 0; i < mMainMesh.number_of_vertices(); i++) {
 		areas[i] = 0.0;
 		kMean[i] = 0.0;
-		kGauss[i] = PI2;
+		kGauss[i] = PI2*2;
 		coord[i] = Kernel::Vector_3(0, 0, 0);
 	}
 
@@ -71,20 +73,20 @@ void Curvature::computeMeshCurvature2() {
 		else {
 			double area = sqrt(CGAL::squared_area(faceVertices[0], faceVertices[1], faceVertices[2]));
 			if (angle0 >= (PI2 / 2)) {
-				areas[vertexMap[faceVertices[0]]] = area / 2;
-				areas[vertexMap[faceVertices[1]]] = area / 4;
-				areas[vertexMap[faceVertices[2]]] = area / 4;
+				areas[vertexMap[faceVertices[0]]] += area / 2;
+				areas[vertexMap[faceVertices[1]]] += area / 4;
+				areas[vertexMap[faceVertices[2]]] += area / 4;
 			
 			}
 			else if(angle1 >= (PI2 / 2)){
-				areas[vertexMap[faceVertices[0]]] = area / 4;
-				areas[vertexMap[faceVertices[1]]] = area / 2;
-				areas[vertexMap[faceVertices[2]]] = area / 4;
+				areas[vertexMap[faceVertices[0]]] += area / 4;
+				areas[vertexMap[faceVertices[1]]] += area / 2;
+				areas[vertexMap[faceVertices[2]]] += area / 4;
 			}
 			else {
-				areas[vertexMap[faceVertices[0]]] = area / 4;
-				areas[vertexMap[faceVertices[1]]] = area / 4;
-				areas[vertexMap[faceVertices[2]]] = area / 2;
+				areas[vertexMap[faceVertices[0]]] += area / 4;
+				areas[vertexMap[faceVertices[1]]] += area / 4;
+				areas[vertexMap[faceVertices[2]]] += area / 2;
 			}
 		}
 	}
@@ -108,19 +110,15 @@ void Curvature::computeMeshCurvature2() {
 		angle1 = glm::angle(glm::normalize(glm::vec3(vec3[0], vec3[1], vec3[2])), glm::normalize(glm::vec3(vec4[0], vec4[1], vec4[2])));
 		angle2 = PI2 - (angle0 + angle1);
 
-		/*angle0 = CGAL::angle(faceVertices[1] - faceVertices[0], faceVertices[2] - faceVertices[0]);
-		angle1 = CGAL::angle(faceVertices[0] - faceVertices[1], faceVertices[2] - faceVertices[1]);
-		angle2 = PI2 - (angle0 + angle1);*/
-
 		Kernel::Vector_3 e0 = faceVertices[1] - faceVertices[0];
 		Kernel::Vector_3 e1 = faceVertices[2] - faceVertices[1];
 		Kernel::Vector_3 e2 = faceVertices[0] - faceVertices[2];
 	
 		if (angle0 == 0 || angle1 == 0 || angle2 == 0) continue;
 
-		coord[vertexMap[faceVertices[0]]] += (e2*(1 / tan(angle1)) + e0*(1 / tan(angle2))) / 4.0;
-		coord[vertexMap[faceVertices[1]]] += (e0*(1 / tan(angle2)) + e1*(1 / tan(angle0))) / 4.0;
-		coord[vertexMap[faceVertices[2]]] += (e1*(1 / tan(angle0)) + e2*(1 / tan(angle1))) / 4.0;
+		coord[vertexMap[faceVertices[0]]] += (e2*(1 / tan(angle1)) - e0*(1 / tan(angle2))) / 4.0;
+		coord[vertexMap[faceVertices[1]]] += (e0*(1 / tan(angle2)) - e1*(1 / tan(angle0))) / 4.0;
+		coord[vertexMap[faceVertices[2]]] += (e1*(1 / tan(angle0)) - e2*(1 / tan(angle1))) / 4.0;
 
 		kGauss[vertexMap[faceVertices[0]]] -= angle0;
 		kGauss[vertexMap[faceVertices[1]]] -= angle1;
@@ -144,9 +142,33 @@ void Curvature::computeMeshCurvature2() {
 		
 		Kernel::Point_3 p = mMainMesh.point(*vi);
 		int value = vertexMap[p];
-		kMean[value] = (((normals[value] * coord[value]) > 0 ? 1.0 : -1)*(coord[value]/areas[value])).squared_length();
+		kMean[value] = ((normals[value] * coord[value]) > 0 ? 1.0 : -1) * sqrt((coord[value]/areas[value]).squared_length());
 		kGauss[value] /= areas[value];
+	
 	}
+	double min = 99999999, max = -999999;
+	for (face_iterator fIter = mMainMesh.faces_begin(); fIter != mMainMesh.faces_end(); fIter++) {
+		std::vector<Kernel::Point_3> faceVertices;
+		int count = 0;
+		double mean = 0;
+		double gauss = 0;
+		CGAL::Vertex_around_face_iterator<Triangle_mesh> vbegin, vend;
+		for (boost::tie(vbegin, vend) = CGAL::vertices_around_face(mMainMesh.halfedge(*fIter), mMainMesh);
+			vbegin != vend; vbegin++) {
+			count++;
+			if (kMean[*vbegin] < min) min = kMean[*vbegin];
+			if (kMean[*vbegin] > max) max = kMean[*vbegin];
+			mean += kMean[*vbegin];
+			gauss += kGauss[*vbegin];
+		}
+		double meanCurve = mean / count;
+		double gaussianCurve = gauss / count;
+		double k1 = meanCurve + sqrt(meanCurve*meanCurve - gaussianCurve);
+		double k2 = meanCurve - sqrt(meanCurve*meanCurve - gaussianCurve);
+		results.push_back(CurvatureUnit(fIter, gaussianCurve, meanCurve, k1, k2));
+	}
+	std::cout << "Min_PV:" << min << " Max_PV:" << max << std::endl;
+#ifdef DEBUG_MODE
 	for (double kMeanVal : kMean)
 		std::cout << kMeanVal << "\t";
 	std::cout << "\n";
@@ -154,6 +176,8 @@ void Curvature::computeMeshCurvature2() {
 	for (double kGaussVal : kGauss)
 		std::cout << kGaussVal << "\t";
 	std::cout << "\n";
+#endif
+	return results;
 }
 
 
@@ -287,21 +311,29 @@ void Curvature::computeMeshCurvature() {
 	std::vector<std::vector<int>> colorBin(binCount);
 	initColorBins2(colorBin);
 
-	for (face_iterator fit = mMainMesh.faces_begin(); fit != mMainMesh.faces_end(); fit++) {
+	/*for (face_iterator fit = mMainMesh.faces_begin(); fit != mMainMesh.faces_end(); fit++) {
 		CurvatureUnit curve = computeFaceCurvature(fit);
 		mCurves.push_back(curve);
 		if (min > curve.getMCurve()) min = curve.getMCurve();
 		if (max < curve.getMCurve()) max = curve.getMCurve();
+	}*/
+
+	mCurves = computeMeshCurvature2();
+	for (CurvatureUnit curve : mCurves) {
+		if (min > curve.getMCurve()) min = curve.getMCurve();
+		if (max < curve.getMCurve()) max = curve.getMCurve();
 	}
-	double range = (max - min) / binCount;
-	if (range == 0)
-		range = 1;
+
 	std::cout << "Max:" << max << "Min:" << min<<std::endl;
-	int count = 0;
-	for (CurvatureUnit unit : mCurves) {
-		int binNum = unit.getMCurve() < 0 ? 0 : 1;
+	
+	for (CurvatureUnit &unit : mCurves) {
+		float scale = (unit.getMCurve() - min) / (max - min);
+
+		int binNum = floor((unit.getMCurve() - min) / (max - min));
 		std::vector<int> colorVec = colorBin[binNum];
-		unit.setColor(colorVec);
+
+		unit.setCurveScale(scale);
+		faceColorScales.push_back(scale);
 		faceColor.push_back(colorVec);
 	}
 

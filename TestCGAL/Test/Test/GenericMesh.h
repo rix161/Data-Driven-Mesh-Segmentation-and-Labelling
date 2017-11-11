@@ -10,9 +10,14 @@ protected:
 	std::vector<std::vector<int>>vectexColor;
 	std::vector<std::deque<int>>faceIndex;
 	std::vector<std::vector<int>>faceColor;
+	std::vector<float>faceColorScales;
 	int mVertexCount, mFaceCount, mEdgeCount;
-	bool mIsValid;
+	bool mIsValid,mInterpolate;
 public:
+	GenericMesh() {
+		mInterpolate = false;
+	}
+
 	void setData(std::vector<Kernel::Point_3> vData,
 		std::vector<std::vector<int>> vColor,
 		std::vector<std::deque<int>> fData,
@@ -38,6 +43,9 @@ public:
 	int getVertexCount() { return mVertexCount;}
 	int getFaceCount() { return mFaceCount; }
 	int getEdgeCount() { return mEdgeCount; }
+	std::vector<float> getColorScales() { return faceColorScales; }
+	void setInterpolate(bool val) { mInterpolate = val; }
+	bool isInterpolate() { return mInterpolate; }
 	bool isValid() {return mIsValid;}
 };
 #endif // ! __GENERIC_MESH__

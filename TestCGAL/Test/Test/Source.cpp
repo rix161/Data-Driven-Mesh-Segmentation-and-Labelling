@@ -11,7 +11,6 @@
 #include "SDFUnit.h"
 #include "Curvature.h"
 #include "VIS.h"
-#include <Eigen/Dense>
 
 #include <ctime>
 #include <chrono>
@@ -21,20 +20,19 @@ int main(int argc, char** argv)
 {
 	Triangle_mesh tmesh;
 	std::chrono::system_clock::time_point start;
-
+	const char* fileName = "F:\\Masters\\SemI\\Computer Graphics\\Input Meshes\\offFiles\\TestModels\\mushroom.off";
+	
 	double seconds;
 	//const char* fileName = "F:\\Masters\\SemI\\Computer Graphics\\Input Meshes\\PaperData\\labeledDb\\LabeledDB_new\\Bearing\\354.off";
-	const char* fileName = "F:\\Masters\\SemI\\Computer Graphics\\Input Meshes\\offFiles\\TestModels\\cube.off";
-
 	Curvature cMesh(fileName);
 	cMesh.crunchMesh();
-	cMesh.computeMeshCurvature2();
+	cMesh.computeMeshCurvature();
 	
-	/*AGDRenderer myRenderer(argc, argv, 1024, 1024, "AGDRenderer");
+	AGDRenderer myRenderer(argc, argv, 1024, 1024, "AGDRenderer");
 	myRenderer.setupRendererParameters(
 		"F:\\Masters\\SemI\\Computer Graphics\\TestCGAL\\Test\\Test\\AGDVertexShader.vs",
 		"F:\\Masters\\SemI\\Computer Graphics\\TestCGAL\\Test\\Test\\AGDFragmentShader.fs",
-		cMesh);*/
+		cMesh);
 
 	/*Triangle_mesh tmesh2;
 	std::ifstream in2(fileName);
@@ -78,6 +76,6 @@ int main(int argc, char** argv)
 	vis.generateFeatures("F:\\Masters\\SemI\\Computer Graphics\\Input Meshes\\PaperData\\labeledDb_features\\Bearing\\354_sdf.txt", "F:\\Masters\\SemI\\Computer Graphics\\Input Meshes\\PaperData\\labeledDb_features\\Bearing\\354_vis.txt",);
 	*/
 	
-
+	glutMainLoop();
 	return 0;
 } 

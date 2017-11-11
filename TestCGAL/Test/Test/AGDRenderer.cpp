@@ -24,14 +24,19 @@ void AGDRenderer::setupRendererParameters(
 	std::vector<std::vector<int>>vertexColors = mesh.getVertexColor();
 	std::vector<std::deque<int>>faceIndex = mesh.getFaceIndex();
 	std::vector<std::vector<int>>faceColor = mesh.getFaceColor();
+	std::vector<float>faceColorScale = mesh.getColorScales();
 	AGDRenderer::vertexCount = mesh.getFaceCount();
 	int faceCount = mesh.getFaceCount();
 	int edgeCount = mesh.getEdgeCount();
+	bool doColorScale = mesh.isInterpolate();
 
 	std::vector<GLfloat> meshData;
 	for (int faceIter = 0; faceIter < faceIndex.size(); faceIter++) {
 		std::deque<int> faceValues = faceIndex[faceIter];
 		std::vector<int> faceColorValues = faceColor[faceIter];
+		float colorScale = 1.0;
+		if (doColorScale) colorScale = faceColorScale[faceIter];
+		
 		for (std::deque<int>::iterator it2 = faceValues.begin(); it2 != faceValues.end(); it2++) {
 			Kernel::Point_3 tempPoint = vertexPoints.at(*it2);
 			
@@ -43,6 +48,8 @@ void AGDRenderer::setupRendererParameters(
 			meshData.push_back(faceColorValues[1] / 255.0);
 			meshData.push_back(faceColorValues[2] / 255.0);
 			meshData.push_back(faceColorValues[3]);
+
+			meshData.push_back(colorScale);
 		}
 	}
 	glUseProgram(mProgramId);
@@ -56,6 +63,9 @@ void AGDRenderer::setupRendererParameters(
 }
 
 void AGDRenderer::renderScene() {
+	int strideCount = 8;
+	int vertexCount = 3;
+	int colorCount = 4;
 
 	glClear(GL_COLOR_BUFFER_BIT);
 	glEnable(GL_CULL_FACE);
@@ -77,14 +87,17 @@ void AGDRenderer::renderScene() {
 
 	glEnableVertexAttribArray(0);
 	glEnableVertexAttribArray(1);
+	glEnableVertexAttribArray(2);
 
 	glBindBuffer(GL_ARRAY_BUFFER, AGDRenderer::mVBO);
-	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, AGDRenderer::mVBOSize * 7, 0);
-	glVertexAttribPointer(1, 4, GL_FLOAT, GL_FALSE, AGDRenderer::mVBOSize * 7, (const GLvoid*)(AGDRenderer::mVBOSize*3));
+	glVertexAttribPointer(0, vertexCount, GL_FLOAT, GL_FALSE, AGDRenderer::mVBOSize * strideCount, 0);
+	glVertexAttribPointer(1, colorCount, GL_FLOAT, GL_FALSE, AGDRenderer::mVBOSize * strideCount, (const GLvoid*)(AGDRenderer::mVBOSize*3));
+	glVertexAttribPointer(2, 1, GL_FLOAT, GL_FALSE, AGDRenderer::mVBOSize * strideCount, (const GLvoid*)(AGDRenderer::mVBOSize * (vertexCount+colorCount)));
 	glDrawArrays(GL_TRIANGLES, 0, (3* AGDRenderer::vertexCount));
 
 	glDisableVertexAttribArray(0);
 	glDisableVertexAttribArray(1);
+	glEnableVertexAttribArray(2);
 
 	glutSwapBuffers();
 }

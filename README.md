@@ -7,4 +7,9 @@ Implementation of Shape diameter function
 
 Implementation of Volumetric shape images
 
-![VISImage](https://github.com/rix161/SBU_ComputerGraphics/blob/master/TestCGAL/Test/SceenShots/VISResult.png)
+![VSIImage](https://github.com/rix161/SBU_ComputerGraphics/blob/master/TestCGAL/Test/SceenShots/VisResult.png)
+
+
+Implementation of Mean and Gaussian curvature
+
+![CurImage](https://github.com/rix161/SBU_ComputerGraphics/blob/master/TestCGAL/Test/SceenShots/curvatureResult.png)

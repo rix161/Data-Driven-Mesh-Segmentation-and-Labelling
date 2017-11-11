@@ -10,6 +10,7 @@ private:
 	double mCurve;
 	double K1;
 	double K2;
+	double mScale;
 	face_iterator fIter;
 	std::vector<int> faceColor;
 	std::vector<double> features;
@@ -21,9 +22,11 @@ public:
 		this->mCurve = mCurve;
 		K1 = k1;
 		K2 = k2;
+		mScale = 0.0;
 	}
 
 	void setColor(std::vector<int> faceColor) { this->faceColor = faceColor;}
+	void setCurveScale(double scale) { this->mScale = scale; }
 	void computeFeatures() {}
 	std::vector<double> getFeatures() { return this->features; }
 	double getGCurve() { return gCurve; }

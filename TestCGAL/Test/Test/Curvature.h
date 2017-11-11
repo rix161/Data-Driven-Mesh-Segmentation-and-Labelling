@@ -30,6 +30,6 @@ public:
 	Curvature(const char* fileName);
 	CurvatureUnit computeFaceCurvature(face_iterator);
 	void computeMeshCurvature();
-	void computeMeshCurvature2();
+	std::vector<CurvatureUnit> computeMeshCurvature2();
 };
 #endif // ! __CURVATURE_FEATURE__
