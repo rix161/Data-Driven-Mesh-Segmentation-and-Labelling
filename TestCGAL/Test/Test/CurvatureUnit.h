@@ -16,6 +16,15 @@ private:
 	std::vector<double> features;
 
 public:
+	CurvatureUnit() {
+
+		this->gCurve = 0.0;
+		this->mCurve = 0.0;
+		K1 = 0.0;
+		K2 = 0.0;
+		mScale = 0.0;
+	}
+
 	CurvatureUnit(face_iterator fIter,double gCurve, double mCurve, double k1, double k2) {
 		this->fIter = fIter;
 		this->gCurve = gCurve;
@@ -31,6 +40,7 @@ public:
 	std::vector<double> getFeatures() { return this->features; }
 	double getGCurve() { return gCurve; }
 	double getMCurve() { return mCurve; }
+	face_iterator getFaceIter() { return fIter; }
 
 	std::vector<double> getPrincipleCurves() { 
 		std::vector<double> temp;

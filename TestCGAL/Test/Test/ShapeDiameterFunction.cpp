@@ -161,6 +161,16 @@ std::vector<SDFUnit> ShapeDiameterFunction::compute(face_iterator face, float co
 
 	if (faceVertices.size() != 3) return sdfData;
 
+	if (CGAL::collinear(faceVertices[0], faceVertices[1], faceVertices[2])) {
+		std::vector<SDFUnit> units;
+		std::cout << "V1:" << faceVertices[0] << " v2:" << faceVertices[1] << " v3:" << faceVertices[2] << "Are collinear" << std::endl;
+
+		for (int i = 0; i < rayCount; i++) {
+			units.push_back(SDFUnit(face, Kernel::Point_3(0,0,0), Kernel::Point_3(0, 0, 0), glm::vec3(0, 1, 0), 0.0f));
+			return units;
+		}
+	}
+
 	Kernel::Vector_3 faceNormal = CGAL::normal(faceVertices[0], faceVertices[1], faceVertices[2])*-1;
 	Kernel::Point_3 faceCenter = CGAL::centroid(faceVertices[0], faceVertices[1], faceVertices[2]);
 	std::vector<Kernel::Vector_3> rays = buildRays(glm::vec3(faceNormal.x(), faceNormal.y(), faceNormal.z()), rayCount, coneAngle);

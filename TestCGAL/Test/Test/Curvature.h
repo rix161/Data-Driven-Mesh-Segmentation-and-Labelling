@@ -10,7 +10,6 @@
 #include <iostream>
 #include <fstream>
 #include "CurvatureUnit.h"
-#include <Eigen/Dense>
 
 typedef CGAL::Exact_predicates_inexact_constructions_kernel Kernel;
 typedef CGAL::Surface_mesh<Kernel::Point_3> Triangle_mesh;
@@ -25,11 +24,13 @@ class Curvature:public GenericMesh {
 private:
 	void computeBaryCenteric(Kernel::Point_3, Kernel::Vector_3, std::vector<Kernel::Point_3>, double &, double &, double &);
 	void buildNRings(face_iterator, std::set<Kernel::Point_3> &, int n);
+	void buildNRings(face_iterator, std::set<Triangle_mesh::Face_index> &, int n);
 	std::vector<CurvatureUnit> mCurves;
 public:
 	Curvature(const char* fileName);
 	CurvatureUnit computeFaceCurvature(face_iterator);
 	void computeMeshCurvature();
 	std::vector<CurvatureUnit> computeMeshCurvature2();
+	void generateFeatures(const char* fileName);
 };
 #endif // ! __CURVATURE_FEATURE__

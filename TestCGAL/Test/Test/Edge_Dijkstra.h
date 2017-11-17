@@ -5,8 +5,6 @@
 #include "GenericMesh.h"
 
 class EdgeDijkstra : public GenericMesh {
-protected:
-	Triangle_mesh mMainMesh;
 
 public:
 	EdgeDijkstra(Triangle_mesh mesh) {

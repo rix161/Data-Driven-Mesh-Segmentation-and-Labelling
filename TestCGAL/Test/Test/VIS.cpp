@@ -29,7 +29,7 @@ void writeData(std::ofstream &sdfFile, std::vector<SDFUnit> &sdfFeatures) {
 		<< meansqrsqr / (1.0*vecSize) << "\t"
 		<< meansqrt / (1.0*vecSize) << "\t"
 		<< meansqrtsqrt / (1.0*vecSize) << "\t"
-		<< values.at(values.size() / 2);
+		<< values.at(values.size() / 2) << "\t";
 
 	for (double alpha : alphas) {
 		sdfFile << log((mean / (1.0*vecSize))*alpha + 1.0) / (log(alpha + 1.0)) << "\t"
@@ -43,8 +43,11 @@ void VIS::generateFeatures(const char* destinationFileSDF, const char* destinati
 
 	int ANGLE_COUNT = 4;
 	int LOG_ALPHA = 4;
-	float angles[4] = { 15.0f,30.0f,45.0,16.0};
+	float angles[4] = { 15.0f,30.0f,45.0};
 	float alphas[4] = { 1.0f, 2.0f, 4.0f,8.0 };
+
+	if (mMainMesh.number_of_faces() > 6000)
+		raycount = raycount/2;
 
 	std::ofstream sdfFile,visFile;
 

@@ -10,5 +10,5 @@ out vec4 vColor;
 
 void main(){
 	gl_Position = uMVPMatrix * vec4(aPosition.x,aPosition.y,aPosition.z, 1.0);
-	vColor = (vec4(0.05,0.05,0.05,1.0)+vec4(aPosition.x,aPosition.y,aPosition.z, 1.0))*aColorScale;
+	vColor		= aColor*aColorScale;
 }

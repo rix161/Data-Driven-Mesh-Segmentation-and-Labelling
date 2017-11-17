@@ -50,6 +50,11 @@ std::vector<CurvatureUnit> Curvature::computeMeshCurvature2() {
 		angle0 = glm::angle(glm::normalize(glm::vec3(vec1[0], vec1[1], vec1[2])), glm::normalize(glm::vec3(vec2[0], vec2[1], vec2[2])));
 		angle1 = glm::angle(glm::normalize(glm::vec3(vec3[0], vec3[1], vec3[2])), glm::normalize(glm::vec3(vec4[0], vec4[1], vec4[2])));
 		angle2 = PI2 - (angle0 + angle1);
+		if (CGAL::collinear(faceVertices[0], faceVertices[1], faceVertices[2])) {
+			std::cout << "V1:" << faceVertices[0] << " v2:" << faceVertices[1] << " v3:" << faceVertices[2] << "Are collinear" << std::endl;
+			results.push_back(CurvatureUnit(fIter, 0, 0, 0, 0));
+			continue;
+		}
 		Kernel::Vector_3 normal = CGAL::normal(faceVertices[0], faceVertices[1], faceVertices[2]);
 		normals[vertexMap[faceVertices[0]]] = normal;
 		normals[vertexMap[faceVertices[1]]] = normal;
@@ -60,15 +65,10 @@ std::vector<CurvatureUnit> Curvature::computeMeshCurvature2() {
 			double e1 = CGAL::squared_distance(faceVertices[2], faceVertices[1]);
 			double e2= CGAL::squared_distance(faceVertices[0], faceVertices[2]);
 
-			float area0, area1, area2;
-
 			areas[vertexMap[faceVertices[0]]] += (e2*(1 / tan(angle1)) + e0*(1 / tan(angle2))) / 8.0;
 			areas[vertexMap[faceVertices[1]]] += (e0*(1 / tan(angle2)) + e1*(1 / tan(angle0))) / 8.0;
 			areas[vertexMap[faceVertices[2]]] += (e1*(1 / tan(angle0)) + e2*(1 / tan(angle1))) / 8.0;
 
-			/*areas[vertexMap[faceVertices[0]]] += area0;
-			areas[vertexMap[faceVertices[1]]] += area1;
-			areas[vertexMap[faceVertices[2]]] += area2;	*/	
 		}
 		else {
 			double area = sqrt(CGAL::squared_area(faceVertices[0], faceVertices[1], faceVertices[2]));
@@ -156,19 +156,23 @@ std::vector<CurvatureUnit> Curvature::computeMeshCurvature2() {
 		for (boost::tie(vbegin, vend) = CGAL::vertices_around_face(mMainMesh.halfedge(*fIter), mMainMesh);
 			vbegin != vend; vbegin++) {
 			count++;
-			if (kMean[*vbegin] < min) min = kMean[*vbegin];
-			if (kMean[*vbegin] > max) max = kMean[*vbegin];
+			if (kGauss[*vbegin] < min) min = kGauss[*vbegin];
+			if (kGauss[*vbegin] > max) max = kGauss[*vbegin];
 			mean += kMean[*vbegin];
 			gauss += kGauss[*vbegin];
 		}
 		double meanCurve = mean / count;
 		double gaussianCurve = gauss / count;
+		double val = meanCurve*meanCurve - gaussianCurve;
+		if (val < 0)
+			val = 0;
 		double k1 = meanCurve + sqrt(meanCurve*meanCurve - gaussianCurve);
 		double k2 = meanCurve - sqrt(meanCurve*meanCurve - gaussianCurve);
 		results.push_back(CurvatureUnit(fIter, gaussianCurve, meanCurve, k1, k2));
 	}
-	std::cout << "Min_PV:" << min << " Max_PV:" << max << std::endl;
+
 #ifdef DEBUG_MODE
+	std::cout << "Min_PV:" << min << " Max_PV:" << max << std::endl;
 	for (double kMeanVal : kMean)
 		std::cout << kMeanVal << "\t";
 	std::cout << "\n";
@@ -191,6 +195,7 @@ void Curvature::computeBaryCenteric(Kernel::Point_3 facePoint, Kernel::Vector_3 
 	baryB = area3 / area1;
 	baryC = 1.0 - baryA - baryB;
 }
+
 void Curvature::buildNRings(face_iterator fIter, std::set<Kernel::Point_3> &nRing, int n) {
 	if (n == 0)
 		return;
@@ -209,6 +214,28 @@ void Curvature::buildNRings(face_iterator fIter, std::set<Kernel::Point_3> &nRin
 		buildNRings(iter, nRing, n - 1);
 	}
 }
+
+
+void Curvature::buildNRings(face_iterator fIter, std::set<Triangle_mesh::Face_index> &nRing, int n) {
+	if (n == 0)
+		return;
+
+	CGAL::Vertex_around_face_iterator<Triangle_mesh> vbegin, vend;
+	for (boost::tie(vbegin, vend) = CGAL::vertices_around_face(mMainMesh.halfedge(*fIter), mMainMesh);
+		vbegin != vend; vbegin++) {
+		nRing.insert(mMainMesh.face(mMainMesh.halfedge((*vbegin))));
+	}
+
+	CGAL::Face_around_face_iterator<Triangle_mesh> fbegin, fend;
+	for (boost::tie(fbegin, fend) = CGAL::faces_around_face(mMainMesh.halfedge(*fIter), mMainMesh);
+		fbegin != fend; fbegin++) {
+		face_iterator iter = mMainMesh.faces_begin();
+		std::advance(iter, (*fbegin));
+		buildNRings(iter, nRing, n - 1);
+	}
+}
+
+
 CurvatureUnit Curvature::computeFaceCurvature(face_iterator faceIter) {
 	std::vector<Kernel::Point_3> faceVertices;
 	std::vector<CurvatureUnit> results;
@@ -320,22 +347,73 @@ void Curvature::computeMeshCurvature() {
 
 	mCurves = computeMeshCurvature2();
 	for (CurvatureUnit curve : mCurves) {
-		if (min > curve.getMCurve()) min = curve.getMCurve();
-		if (max < curve.getMCurve()) max = curve.getMCurve();
+		if (min > curve.getGCurve()) min = curve.getGCurve();
+		if (max < curve.getGCurve()) max = curve.getGCurve();
 	}
 
 	std::cout << "Max:" << max << "Min:" << min<<std::endl;
 	
 	for (CurvatureUnit &unit : mCurves) {
-		float scale = (unit.getMCurve() - min) / (max - min);
+		float scale = (unit.getGCurve() - min) / (max - min);
 
-		int binNum = floor((unit.getMCurve() - min) / (max - min));
+		int binNum = floor((unit.getGCurve() - min) / (max - min));
 		std::vector<int> colorVec = colorBin[binNum];
 
 		unit.setCurveScale(scale);
 		faceColorScales.push_back(scale);
 		faceColor.push_back(colorVec);
 	}
+
+}
+
+
+void Curvature::generateFeatures(const char* fileName) {
+	
+
+	std::ofstream curFile;
+
+	curFile.open(fileName);
+	if (!curFile)
+		return;
+
+	int ringCount[5] = {0,1,2,4};
+	std::map<Triangle_mesh::Face_index, CurvatureUnit> cUnitMap;
+	std::vector<CurvatureUnit> units = computeMeshCurvature2();
+	for (CurvatureUnit unit : units)
+		cUnitMap[(*unit.getFaceIter())] = unit;
+	
+	for (face_iterator fbegin = mMainMesh.faces().begin(); fbegin != mMainMesh.faces().end(); fbegin++) {
+		curFile << (int)(*fbegin) << "\t";
+		for (int rCount : ringCount) {
+			std::set<Triangle_mesh::Face_index> nRing;
+			nRing.insert(*fbegin);
+			buildNRings(fbegin, nRing, rCount);
+			double meanMeanCurve = 0.0;
+			double meanGaussianCurve = 0.0;
+			for (Triangle_mesh::Face_index index : nRing) {
+				meanMeanCurve += cUnitMap.at(index).getMCurve();
+				meanGaussianCurve += cUnitMap.at(index).getMCurve();
+			}
+			meanMeanCurve /= nRing.size();
+			meanGaussianCurve /= nRing.size();
+			double val = meanMeanCurve*meanMeanCurve - meanGaussianCurve;
+			if (val < 0)
+				val = 0;
+			double k1 = meanMeanCurve + sqrt(val);
+			double k2 = meanMeanCurve - sqrt(val);
+			curFile <<k1 << "\t"
+				<< abs(k1) << "\t"
+				<< k2 << "\t"
+				<< abs(k2) << "\t"
+				<< k1*k2 << "\t"
+				<< abs(k1*k2) << "\t"
+				<< (k1 + k2) / 2.0 << "\t"
+				<< abs((k1 + k2) / 2.0) << "\t"
+				<< k1 - k2;
+		}
+		curFile << "\n";
+	}
+
 
 }
 
