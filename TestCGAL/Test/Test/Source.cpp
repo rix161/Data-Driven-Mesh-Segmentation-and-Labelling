@@ -56,19 +56,19 @@ int main(int argc, char** argv)
 	const char* meshDir = argv[1];
 	const char* featureDir = argv[2];
 	
-	//const char* fileName = "F:\\Masters\\SemI\\Computer Graphics\\Input Meshes\\PaperData\\labeledDb\\LabeledDB_new\\Plier\\218.off";
+	const char* fileName = "F:\\Masters\\SemI\\Computer Graphics\\Input Meshes\\PaperData\\ColoredMesh\\real\\201.off";
 
-	std::vector<FeatureUnit> fUnit = getMeshFiles(meshDir, featureDir);
+	/*std::vector<FeatureUnit> fUnit = getMeshFiles(meshDir, featureDir);
 	for (FeatureUnit unit : fUnit) {
 		/*std::cout << "Generating AGD Features for:" << unit.getMeshFileName() << " in:" << unit.getAGDFileName() << std::endl;
 		Curvature c(unit.getMeshFileName().c_str());
 		c.crunchMesh();
-		c.generateFeatures(unit.getCurvatureFileName().c_str());*/
+		c.generateFeatures(unit.getCurvatureFileName().c_str());
 		std::cout << "Generating AGD Features for:" << unit.getMeshFileName() << " in:" << unit.getAGDFileName() << std::endl;
 		CGALGeodesic cgalGeo(unit.getMeshFileName().c_str());
 		cgalGeo.crunchMesh();
 		cgalGeo.generateFeatures(unit.getAGDFileName().c_str());
-	}
+	}*/
 
 
 	/*std::vector<FeatureUnit> fUnit = getMeshFiles(meshDir, featureDir);
@@ -94,7 +94,9 @@ int main(int argc, char** argv)
 	cMesh.crunchMesh();
 	cMesh.generateFeatures("F:\\Masters\\SemI\\Computer Graphics\\Input Meshes\\PaperData\\labeledDb_features\\Bearing\\mushroom_curve.txt");*/
 
-	/*
+	OffWriter writter;
+	GenericMesh cMesh = writter.ReadFile(fileName);
+
 	Triangle_mesh tmesh;
 	AGDRenderer myRenderer(argc, argv, 1024, 1024, "AGDRenderer");
 	myRenderer.setupRendererParameters(
@@ -102,7 +104,7 @@ int main(int argc, char** argv)
 		"F:\\Masters\\SemI\\Computer Graphics\\TestCGAL\\Test\\Test\\AGDFragmentShader.fs",
 		cMesh);
 
-	Triangle_mesh tmesh2;
+	/*Triangle_mesh tmesh2;
 	std::ifstream in2(fileName);
 	in2 >> tmesh2;
 	in2.close();
@@ -120,11 +122,11 @@ int main(int argc, char** argv)
 
 	ShapeDiameterFunction sdf(fileName);
 	sdf.crunchMesh();
-	std::vector<SDFUnit> rays = sdf.compute(iter, 60, 30);
+	std::vector<SDFUnit> rays = sdf.compute(iter, 60, 30)
 
 	VIS vis(fileName);
 	vis.crunchMesh();
-	std::pair<std::vector<SDFUnit>, std::vector<SDFUnit>> rays2 = vis.computeFaceVIS(iter,30,2);
+	std::pair<std::vector<SDFUnit>, std::vector<SDFUnit>> rays2 = vis.computeFaceVIS(iter,30,30);
 
 	SDFRenderer myRenderer(argc, argv, 1024, 1024, "SDFRenderer");
 
@@ -134,12 +136,12 @@ int main(int argc, char** argv)
 		"F:\\Masters\\SemI\\Computer Graphics\\TestCGAL\\Test\\Test\\SDFRayVertextShader.vs",
 		"F:\\Masters\\SemI\\Computer Graphics\\TestCGAL\\Test\\Test\\SDFRayFragmentShader.fs",
 		vis,
-		rays2.second);
+		rays2.second);*/
 
 
 	glutMainLoop();
 
-	VIS vis(fileName);
+	/*VIS vis(fileName);
 	vis.crunchMesh();
 	vis.generateFeatures("F:\\Masters\\SemI\\Computer Graphics\\Input Meshes\\PaperData\\labeledDb_features\\Bearing\\354_sdf.txt", "F:\\Masters\\SemI\\Computer Graphics\\Input Meshes\\PaperData\\labeledDb_features\\Bearing\\354_vis.txt",);
 	

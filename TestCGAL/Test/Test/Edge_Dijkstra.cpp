@@ -1,6 +1,6 @@
 #include "Edge_Dijkstra.h"
 #include "Off_Writer.h"
-
+#include <boost/algorithm/string.hpp>
 
 
 void setupColorBins(std::vector<std::vector<int>> &colorBins) {
@@ -13,6 +13,75 @@ void setupColorBins(std::vector<std::vector<int>> &colorBins) {
 		color[3] = 0;
 		colorBins[i] = color;
 	}
+}
+
+void EdgeDijkstra::generateFeatures() {
+
+};
+
+void EdgeDijkstra::generateFeatures(const char* source, const char* destination) {
+
+	std::ifstream inFile;
+	std::ofstream outFile;
+
+	inFile.open(source);
+	if (!inFile)
+		return;
+
+
+	outFile.open(destination);
+	if (!outFile)
+		return;
+
+	std::string line;
+
+	double *agdVector = new double[mMainMesh.number_of_vertices()];
+	std::memset(agdVector, 0, sizeof(mMainMesh.number_of_vertices()));
+	double *agdFaceVector = new double[mMainMesh.number_of_faces()];
+	std::memset(agdFaceVector, 0, sizeof(mMainMesh.number_of_faces()));
+	double *agdFaceArea = new double[mMainMesh.number_of_faces()];
+	std::memset(agdFaceArea, 0, sizeof(mMainMesh.number_of_faces()));
+
+
+	while (std::getline(inFile, line)) {
+		std::vector<std::string> substrs;
+		boost::split(substrs, line, boost::is_any_of("\t"));
+		int vCount = atoi(substrs[0].c_str());
+		double AGDValue = atof(substrs[1].c_str())/mMainMesh.number_of_vertices();
+		agdVector[vCount] = AGDValue;
+	}
+
+	double avgAgd = 0;
+	double avgArea = 0;
+
+	for (face_iterator fit = mMainMesh.faces_begin(); fit != mMainMesh.faces_end(); fit++) {
+		double avgFaceAgd = 0;
+		int count = 0;
+		CGAL::Vertex_around_face_iterator<Triangle_mesh> vbegin, vend;
+		std::vector<Kernel::Point_3> vertices;
+		for (boost::tie(vbegin, vend) = CGAL::vertices_around_face(mMainMesh.halfedge(*fit), mMainMesh);
+			vbegin != vend; vbegin++) {
+			count++;
+			avgFaceAgd += agdVector[*vbegin];
+			vertices.push_back(mMainMesh.point(*vbegin));
+		}
+		agdFaceVector[*fit] = avgFaceAgd/count;
+		agdFaceArea[*fit] = sqrt(CGAL::squared_area(vertices[0], vertices[1], vertices[2]));
+		avgAgd += agdFaceVector[*fit];
+		avgArea += agdFaceArea[*fit];
+	}
+
+	for (face_iterator fit = mMainMesh.faces_begin(); fit != mMainMesh.faces_end(); fit++) {
+		outFile << (int)(*fit) << "\t"
+		<< agdFaceVector[*fit]*(agdFaceArea[*fit]/avgArea) << "\t"
+		<< pow(agdFaceVector[*fit],2) * (agdFaceArea[*fit] / avgArea) << "\t"
+		<< pow(agdFaceVector[*fit], 4) * (agdFaceArea[*fit] / avgArea) << "\t"
+		<< pow(agdFaceVector[*fit], 8) * (agdFaceArea[*fit] / avgArea) << "\t"
+		<< pow(agdFaceVector[*fit], 0.5) * (agdFaceArea[*fit] / avgArea) << "\t"
+		<< pow(agdFaceVector[*fit], 0.25) * (agdFaceArea[*fit] / avgArea) << "\t"
+		<< "\n";
+	}
+	
 }
 
 void EdgeDijkstra::compute() {

@@ -44,6 +44,12 @@ public:
 		retString = this->fileDirectory + std::string("\\") + "AGD" + std::string("\\") + this->fileName + ".txt";
 		return retString;
 	}
+
+	std::string getAGDRawFileName() {
+		std::string retString;
+		retString = this->fileDirectory + std::string("\\") + "AGD_RAW" + std::string("\\") + this->fileName + ".txt";
+		return retString;
+	}
 };
 
 #endif

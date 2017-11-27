@@ -37,7 +37,8 @@ public:
 		in.close();
 	}
 
-	std::vector<SDFUnit> compute(face_iterator face, float coneAngle, int rayCount);
+	std::vector<SDFUnit> compute(float coneAngle, int rayCount);
+	std::vector<SDFUnit> compute(face_iterator face,float coneAngle, int rayCount);
 };
 
 

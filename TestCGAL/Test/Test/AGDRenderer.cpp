@@ -31,7 +31,9 @@ void AGDRenderer::setupRendererParameters(
 	bool doColorScale = mesh.isInterpolate();
 
 	std::vector<GLfloat> meshData;
-	for (int faceIter = 0; faceIter < faceIndex.size(); faceIter++) {
+	int i = 0;
+	for (int faceIter = 0; faceIter < faceIndex.size()-1; faceIter++) {
+		std::cout << "i:" << i++ << std::endl;
 		std::deque<int> faceValues = faceIndex[faceIter];
 		std::vector<int> faceColorValues = faceColor[faceIter];
 		float colorScale = 1.0;
@@ -60,6 +62,30 @@ void AGDRenderer::setupRendererParameters(
 	AGDRenderer::uMVPMatrix = glGetUniformLocation(mProgramId, "uMVPMatrix");
 	AGDRenderer::mSetupDone = true;
 	AGDRenderer::mVBOSize = sizeof(meshData[0]);
+}
+
+GLuint AGDRenderer::getRenderedTexture() {
+	GLuint renderedFB = 0;
+	glGenFramebuffers(1, &renderedFB);
+	glBindFramebuffer(GL_FRAMEBUFFER, renderedFB);
+
+	GLuint renderedTexture;
+	glGenTextures(1, &renderedTexture);
+	glBindTexture(GL_TEXTURE_2D, renderedTexture);
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, windowX, windowY, 0, GL_RGBA, GL_UNSIGNED_BYTE, 0);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+
+	glFramebufferTexture(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, renderedTexture, 0);
+	GLenum DrawBuffers[1] = { GL_COLOR_ATTACHMENT0 };
+	glDrawBuffers(1, DrawBuffers);
+	if (glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE)
+		std::cout << "Unable to create FrameBuffer" << std::endl;
+	glBindFramebuffer(GL_FRAMEBUFFER, renderedFB);
+	renderScene();
+	glBindFramebuffer(GL_FRAMEBUFFER, 0);
+
+	return renderedTexture;
 }
 
 void AGDRenderer::renderScene() {

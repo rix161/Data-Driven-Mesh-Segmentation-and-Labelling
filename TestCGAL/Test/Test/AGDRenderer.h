@@ -27,6 +27,8 @@ public:
 	static int windowX, windowY;
 	static float FOV, nearPlane, farPlane;
 
+	GLuint getRenderedTexture();
+
 	static void renderScene();
 	AGDRenderer(int argc, char** argv, int sizeX, int sizeY, const char* title) {
 		initRenderer(argc, argv, sizeX, sizeY, title);

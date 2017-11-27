@@ -147,7 +147,18 @@ std::vector<SDFUnit> ShapeDiameterFunction::computeIntersection(Kernel::Point_3 
 
 }
 
-std::vector<SDFUnit> ShapeDiameterFunction::compute(face_iterator face, float coneAngle, int rayCount) {
+
+std::vector<SDFUnit> ShapeDiameterFunction::compute(float coneAngle, int rayCount) {
+	int randnum = rand() % (mMainMesh.number_of_faces() + 1);
+	randnum = rand() % (mMainMesh.number_of_faces() + 1);
+	randnum = rand() % (mMainMesh.number_of_faces() + 1);
+	randnum = rand() % (mMainMesh.number_of_faces() + 1);
+	face_iterator iter = mMainMesh.faces_begin();
+	std::advance(iter, randnum);
+	return compute(iter, coneAngle, rayCount);
+}
+
+std::vector<SDFUnit> ShapeDiameterFunction::compute(face_iterator face,float coneAngle, int rayCount) {
 
 	std::vector<Kernel::Point_3> faceVertices;
 	CGAL::Vertex_around_face_iterator<Triangle_mesh> vbegin, vend;

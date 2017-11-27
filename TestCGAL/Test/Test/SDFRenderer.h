@@ -14,7 +14,7 @@ private:
 	static GLuint mRayProgramId;
 
 protected:
-	void initRenderer(int argc, char** argv, int sizeX, int sizeY, const char* title);
+	void initRenderer(int argc, char** argv, int sizeX, int sizeY, const char* title,bool standAlone);
 	static void setupGlutCallBacks();
 
 public:
@@ -32,10 +32,10 @@ public:
 
 	static int windowX, windowY;
 	static float FOV, nearPlane, farPlane;
-
+	GLuint getRenderedTexture();
 	static void renderScene();
-	SDFRenderer(int argc, char** argv, int sizeX, int sizeY, const char* title) {
-		initRenderer(argc, argv, sizeX, sizeY, title);
+	SDFRenderer(int argc, char** argv, int sizeX, int sizeY, const char* title,bool standAlone=true) {
+		initRenderer(argc, argv, sizeX, sizeY, title, standAlone);
 	}
 
 	void setupRendererParameters(

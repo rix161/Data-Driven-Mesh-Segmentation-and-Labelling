@@ -18,6 +18,32 @@ GLuint SDFRenderer::mProgramId = -1;
 GLuint SDFRenderer::mRayProgramId = -1;
 GLuint SDFRenderer::uMVPMatrix2 = -1;
 
+
+GLuint SDFRenderer::getRenderedTexture() {
+	GLuint renderedFB = 0;
+	glGenFramebuffers(1, &renderedFB);
+	glBindFramebuffer(GL_FRAMEBUFFER, renderedFB);
+
+	GLuint renderedTexture;
+	glGenTextures(1, &renderedTexture);
+	glBindTexture(GL_TEXTURE_2D, renderedTexture);
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, windowX, windowY, 0, GL_RGBA, GL_UNSIGNED_BYTE, 0);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+
+	glFramebufferTexture(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, renderedTexture, 0);
+	GLenum DrawBuffers[1] = { GL_COLOR_ATTACHMENT0 };
+	glDrawBuffers(1, DrawBuffers);
+	if (glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE)
+		std::cout << "Unable to create FrameBuffer" << std::endl;
+	glBindFramebuffer(GL_FRAMEBUFFER, renderedFB);
+	renderScene();
+	glBindFramebuffer(GL_FRAMEBUFFER, 0);
+
+	return renderedTexture;
+}
+
+
 void SDFRenderer::setupRendererParameters(
 	const char* vertexShader,
 	const char* fragmentShader,
@@ -27,6 +53,7 @@ void SDFRenderer::setupRendererParameters(
 	std::vector<SDFUnit> rays) {
 
 	ShaderProgramHelper sHelper;
+	
 	SDFRenderer::mProgramId = sHelper.generateProgram(vertexShader, fragmentShader);
 	SDFRenderer::mRayProgramId = sHelper.generateProgram(rayVertexShader, rayFragmentShader);
 
@@ -91,7 +118,7 @@ void SDFRenderer::setupRendererParameters(
 		rayData.push_back(color[1]);
 		rayData.push_back(color[2]);
 	}
-
+	
 	glUseProgram(SDFRenderer::mProgramId);
 	glGenBuffers(1, &mVBO);
 	glBindBuffer(GL_ARRAY_BUFFER, mVBO);
@@ -164,24 +191,25 @@ void SDFRenderer::renderScene() {
 
 
 
-void SDFRenderer::initRenderer(int argc, char** argv, int sizeX, int sizeY, const char* title) {
-	glutInit(&argc, argv);
-
+void SDFRenderer::initRenderer(int argc, char** argv, int sizeX, int sizeY, const char* title,bool standAlone=true) {
 	SDFRenderer::windowX = sizeX;
 	SDFRenderer::windowY = sizeY;
 
-	glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGBA);
-	glutInitWindowSize(sizeX, sizeY);
-	glutInitWindowPosition(100, 100);
-	glutCreateWindow(title);
+	if (standAlone) {
+		glutInit(&argc, argv);
+		glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGBA);
+		glutInitWindowSize(sizeX, sizeY);
+		glutInitWindowPosition(100, 100);
+		glutCreateWindow(title);
 
-	setupGlutCallBacks();
+		setupGlutCallBacks();
 
-	// Must be done after glut is initialized!
-	GLenum res = glewInit();
-	if (res != GLEW_OK) {
-		std::cout << "Error: '%s'\n" << glewGetErrorString(res);
-		return;
+		// Must be done after glut is initialized!
+		GLenum res = glewInit();
+		if (res != GLEW_OK) {
+			std::cout << "Error: '%s'\n" << glewGetErrorString(res);
+			return;
+		}
 	}
 
 	glClearColor(0.0f, 0.0f, 0.0f, 0.0f);

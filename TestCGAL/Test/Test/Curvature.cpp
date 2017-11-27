@@ -9,6 +9,7 @@ Curvature::Curvature(const char* fileName) {
 	std::cout<<mMainMesh.number_of_vertices() << std::endl;
 	in.close();
 	this->setInterpolate(true);
+	mIsValid = true;
 }
 
 
@@ -409,7 +410,7 @@ void Curvature::generateFeatures(const char* fileName) {
 				<< abs(k1*k2) << "\t"
 				<< (k1 + k2) / 2.0 << "\t"
 				<< abs((k1 + k2) / 2.0) << "\t"
-				<< k1 - k2;
+				<< k1 - k2 << "\t";
 		}
 		curFile << "\n";
 	}
