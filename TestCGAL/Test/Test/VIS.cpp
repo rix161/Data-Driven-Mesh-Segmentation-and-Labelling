@@ -79,6 +79,18 @@ void VIS::generateFeatures(const char* destinationFileSDF, const char* destinati
 
 }
 
+std::pair<std::vector<SDFUnit>, std::vector<SDFUnit>> VIS::computeFaceVIS(float angle, int rayCount) {
+	
+	int randnum = rand() % (mMainMesh.number_of_faces() + 1);
+	randnum = rand() % (mMainMesh.number_of_faces() + 1);
+	randnum = rand() % (mMainMesh.number_of_faces() + 1);
+	randnum = rand() % (mMainMesh.number_of_faces() + 1);
+	face_iterator iter = mMainMesh.faces_begin();
+	std::advance(iter, randnum);
+	return computeFaceVIS(iter, angle, rayCount);
+
+}
+
 std::pair<std::vector<SDFUnit>, std::vector<SDFUnit>> VIS::computeFaceVIS(face_iterator face,float angle, int rayCount) {
 	 std::vector<SDFUnit> rays = compute(face, angle, rayCount);
 	 SDFUnit maxUnit;
@@ -90,7 +102,7 @@ std::pair<std::vector<SDFUnit>, std::vector<SDFUnit>> VIS::computeFaceVIS(face_i
 		 }
 	 }
 	 Kernel::Point_3 midPoint = CGAL::midpoint(maxUnit.getEndPoint(), maxUnit.getStartPoint());
-	 std::vector<SDFUnit> rays3 = computeIntersection(midPoint, Kernel::Vector_3(0.0, 1.0, 0.0), buildRays(glm::vec3(0.0, 1.0, 0.0), rayCount, 180, true),true);
+	 std::vector<SDFUnit> rays3 = computeIntersection(midPoint, Kernel::Vector_3(0.0, 1.0, 0.0), buildRays(glm::vec3(0.0, 1.0, 0.0), rayCount, 180, true),glm::vec3(1.0, 0.0, 0.0),true);
 
 #ifdef SHOW_MEDIAL_AXIS
 	 maxUnit.setColor(glm::vec3(0, 0, 1.0));

@@ -110,7 +110,7 @@ std::vector<Kernel::Vector_3> ShapeDiameterFunction::buildRays(glm::vec3 normal,
 	return rays;
 }
 
-std::vector<SDFUnit> ShapeDiameterFunction::computeIntersection(Kernel::Point_3 faceCenter,Kernel::Vector_3 faceNormal,std::vector<Kernel::Vector_3> rays,bool bypass) {
+std::vector<SDFUnit> ShapeDiameterFunction::computeIntersection(Kernel::Point_3 faceCenter,Kernel::Vector_3 faceNormal,std::vector<Kernel::Vector_3> rays, glm::vec3 lineColor, bool bypass) {
 
 	std::vector<SDFUnit> sdfData;
 	
@@ -122,7 +122,6 @@ std::vector<SDFUnit> ShapeDiameterFunction::computeIntersection(Kernel::Point_3 
 		for (face_iterator fIter = mMainMesh.faces_begin(); fIter != mMainMesh.faces_end(); fIter++) {
 			std::vector<Kernel::Point_3> triangleVertices;
 			Kernel::Point_3 interPoint(0, 0, 0);
-			glm::vec3 lineColor(0.0, 1.0, 0.0);
 
 			CGAL::Vertex_around_face_iterator<Triangle_mesh> vbegin, vend;
 			for (boost::tie(vbegin, vend) = CGAL::vertices_around_face(mMainMesh.halfedge(*fIter), mMainMesh);
@@ -141,7 +140,7 @@ std::vector<SDFUnit> ShapeDiameterFunction::computeIntersection(Kernel::Point_3 
 		}
 		glm::vec3 rotVec = glm::vec3(faceNormal.x(), faceNormal.y(), faceNormal.z());
 		glm::vec3 rayVec = glm::vec3(ray.x(), ray.y(), ray.z());
-		sdfData.push_back(SDFUnit(minIter, faceCenter, minInterPoint, glm::vec3(0, 1, 0), glm::degrees(glm::angle(rayVec, rotVec))));
+		sdfData.push_back(SDFUnit(minIter, faceCenter, minInterPoint, lineColor, glm::degrees(glm::angle(rayVec, rotVec))));
 	}
 	return sdfData;
 
@@ -162,7 +161,6 @@ std::vector<SDFUnit> ShapeDiameterFunction::compute(face_iterator face,float con
 
 	std::vector<Kernel::Point_3> faceVertices;
 	CGAL::Vertex_around_face_iterator<Triangle_mesh> vbegin, vend;
-	glm::vec3 lineColor(0.0, 1.0, 0.0);
 	std::vector<SDFUnit> sdfData;
 
 	for (boost::tie(vbegin, vend) = CGAL::vertices_around_face(mMainMesh.halfedge(*face), mMainMesh);
@@ -186,5 +184,5 @@ std::vector<SDFUnit> ShapeDiameterFunction::compute(face_iterator face,float con
 	Kernel::Point_3 faceCenter = CGAL::centroid(faceVertices[0], faceVertices[1], faceVertices[2]);
 	std::vector<Kernel::Vector_3> rays = buildRays(glm::vec3(faceNormal.x(), faceNormal.y(), faceNormal.z()), rayCount, coneAngle);
 
-	return computeIntersection(faceCenter, faceNormal,rays);
+	return computeIntersection(faceCenter, faceNormal,rays,glm::vec3(0,1,0));
 }

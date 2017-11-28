@@ -34,8 +34,15 @@ public:
 	static float FOV, nearPlane, farPlane;
 	GLuint getRenderedTexture();
 	static void renderScene();
+
+	SDFRenderer() {};
 	SDFRenderer(int argc, char** argv, int sizeX, int sizeY, const char* title,bool standAlone=true) {
 		initRenderer(argc, argv, sizeX, sizeY, title, standAlone);
+	}
+	
+	void setWindow(int windowX, int windowY) {
+		this->windowX = windowX;
+		this->windowY = windowY;
 	}
 
 	void setupRendererParameters(
@@ -53,6 +60,7 @@ public:
 		if (mRayProgramId != -1) {
 			glDeleteProgram(mRayProgramId);
 		}
+		glDeleteBuffers(1,&SDFRenderer::mVBO);
 	}
 };
 #endif

@@ -26,7 +26,7 @@ protected:
 		std::vector<Kernel::Point_3> triangleFaces,
 		std::vector<SDFUnit> &sdfUnits);
 
-	std::vector<SDFUnit> computeIntersection(Kernel::Point_3 faceCenter, Kernel::Vector_3 faceNormal, std::vector<Kernel::Vector_3> rays,bool bypass=false);
+	std::vector<SDFUnit> computeIntersection(Kernel::Point_3 faceCenter, Kernel::Vector_3 faceNormal, std::vector<Kernel::Vector_3> rays,glm::vec3 lineColor,bool bypass=false);
 
 public:
 
