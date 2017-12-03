@@ -1,8 +1,7 @@
 #ifndef __SDF_UNIT__
 #define __SDF_UNIT__
-#include "CGAL_geodesic.h"
 #include <glm/glm.hpp>
-
+#include "GenericMesh.h"
 class SDFUnit {
 private:
 	face_iterator mFaceIter;

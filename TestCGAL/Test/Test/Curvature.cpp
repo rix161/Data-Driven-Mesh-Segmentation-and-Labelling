@@ -15,7 +15,6 @@ Curvature::Curvature(const char* fileName) {
 
 std::vector<CurvatureUnit> Curvature::computeMeshCurvature2() {
 
-	//TBD!!!!!
 	std::vector<double> areas(mMainMesh.number_of_vertices());
 	std::vector<Kernel::Vector_3> coord(mMainMesh.number_of_vertices());
 	std::vector<Kernel::Vector_3> normals(mMainMesh.number_of_vertices());
@@ -62,14 +61,13 @@ std::vector<CurvatureUnit> Curvature::computeMeshCurvature2() {
 		normals[vertexMap[faceVertices[2]]] = normal;
 
 		if (angle0 < (PI2 / 2) && angle1 < (PI2 / 2) && angle2 < (PI2 / 2)) {
-			double e0 = CGAL::squared_distance(faceVertices[1], faceVertices[0]);
-			double e1 = CGAL::squared_distance(faceVertices[2], faceVertices[1]);
-			double e2= CGAL::squared_distance(faceVertices[0], faceVertices[2]);
+			double vec0 = CGAL::squared_distance(faceVertices[1], faceVertices[0]);
+			double vec1 = CGAL::squared_distance(faceVertices[2], faceVertices[1]);
+			double vec2= CGAL::squared_distance(faceVertices[0], faceVertices[2]);
 
-			areas[vertexMap[faceVertices[0]]] += (e2*(1 / tan(angle1)) + e0*(1 / tan(angle2))) / 8.0;
-			areas[vertexMap[faceVertices[1]]] += (e0*(1 / tan(angle2)) + e1*(1 / tan(angle0))) / 8.0;
-			areas[vertexMap[faceVertices[2]]] += (e1*(1 / tan(angle0)) + e2*(1 / tan(angle1))) / 8.0;
-
+			areas[vertexMap[faceVertices[0]]] += (vec2*(1 / tan(angle1)) + vec0*(1 / tan(angle2))) / 8.0;
+			areas[vertexMap[faceVertices[1]]] += (vec0*(1 / tan(angle2)) + vec1*(1 / tan(angle0))) / 8.0;
+			areas[vertexMap[faceVertices[2]]] += (vec1*(1 / tan(angle0)) + vec2*(1 / tan(angle1))) / 8.0;
 		}
 		else {
 			double area = sqrt(CGAL::squared_area(faceVertices[0], faceVertices[1], faceVertices[2]));
@@ -106,20 +104,17 @@ std::vector<CurvatureUnit> Curvature::computeMeshCurvature2() {
 		Kernel::Vector_3 vec2 = faceVertices[2] - faceVertices[0];
 		Kernel::Vector_3 vec3 = faceVertices[0] - faceVertices[1];
 		Kernel::Vector_3 vec4 = faceVertices[2] - faceVertices[1];
+		Kernel::Vector_3 vec5 = faceVertices[0] - faceVertices[2];
 
 		angle0 = glm::angle(glm::normalize(glm::vec3(vec1[0], vec1[1], vec1[2])), glm::normalize(glm::vec3(vec2[0], vec2[1], vec2[2])));
 		angle1 = glm::angle(glm::normalize(glm::vec3(vec3[0], vec3[1], vec3[2])), glm::normalize(glm::vec3(vec4[0], vec4[1], vec4[2])));
 		angle2 = PI2 - (angle0 + angle1);
 
-		Kernel::Vector_3 e0 = faceVertices[1] - faceVertices[0];
-		Kernel::Vector_3 e1 = faceVertices[2] - faceVertices[1];
-		Kernel::Vector_3 e2 = faceVertices[0] - faceVertices[2];
-	
 		if (angle0 == 0 || angle1 == 0 || angle2 == 0) continue;
 
-		coord[vertexMap[faceVertices[0]]] += (e2*(1 / tan(angle1)) - e0*(1 / tan(angle2))) / 4.0;
-		coord[vertexMap[faceVertices[1]]] += (e0*(1 / tan(angle2)) - e1*(1 / tan(angle0))) / 4.0;
-		coord[vertexMap[faceVertices[2]]] += (e1*(1 / tan(angle0)) - e2*(1 / tan(angle1))) / 4.0;
+		coord[vertexMap[faceVertices[0]]] += (vec5*(1 / tan(angle1)) - vec1*(1 / tan(angle2))) / 4.0;
+		coord[vertexMap[faceVertices[1]]] += (vec1*(1 / tan(angle2)) - vec4*(1 / tan(angle0))) / 4.0;
+		coord[vertexMap[faceVertices[2]]] += (vec4*(1 / tan(angle0)) - vec5*(1 / tan(angle1))) / 4.0;
 
 		kGauss[vertexMap[faceVertices[0]]] -= angle0;
 		kGauss[vertexMap[faceVertices[1]]] -= angle1;
@@ -145,8 +140,8 @@ std::vector<CurvatureUnit> Curvature::computeMeshCurvature2() {
 		int value = vertexMap[p];
 		kMean[value] = ((normals[value] * coord[value]) > 0 ? 1.0 : -1) * sqrt((coord[value]/areas[value]).squared_length());
 		kGauss[value] /= areas[value];
-	
 	}
+
 	double min = 99999999, max = -999999;
 	for (face_iterator fIter = mMainMesh.faces_begin(); fIter != mMainMesh.faces_end(); fIter++) {
 		std::vector<Kernel::Point_3> faceVertices;

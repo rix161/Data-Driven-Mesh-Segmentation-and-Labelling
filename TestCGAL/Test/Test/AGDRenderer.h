@@ -1,6 +1,5 @@
 #ifndef __AGD_RENDERER__
 #define __AGD_RENDERER__
-#include "CGRenderer.h"
 #include "ShaderHelper.h"
 #include "GenericMesh.h"
 #include <glm/glm.hpp>
@@ -27,7 +26,7 @@ public:
 
 	static int windowX, windowY;
 	static float FOV, nearPlane, farPlane;
-
+	static float mTX, mTY,mTZ;
 	GLuint getRenderedTexture();
 
 	static void renderScene();
@@ -35,7 +34,7 @@ public:
 	void setupSecondMesh(GenericMesh mesh);
 	void renderSceneDouble();
 
-	AGDRenderer() {};
+	AGDRenderer() { AGDRenderer::mVBO = 0; };
 	AGDRenderer(int argc, char** argv, int sizeX, int sizeY, const char* title) {
 		initRenderer(argc, argv, sizeX, sizeY, title);
 	}
@@ -45,16 +44,25 @@ public:
 		this->windowY = windowY;
 	}
 
+	void updateCamera(float tVal[]) {
+		mTX += tVal[0];
+		mTY += tVal[1];
+		mTZ += tVal[1];
+	}
 	void setupRendererParameters(
 		const char* vertexShader,
 		const char* fragmentShader,
 		GenericMesh mesh);
 
 	~AGDRenderer() {
-		if (mProgramId != -1) {
+		if (mProgramId != 0) {
 			glDeleteProgram(mProgramId);
 		}
-		glDeleteBuffers(1, &AGDRenderer::mVBO);
+
+		if(mVBO!=0)
+			glDeleteBuffers(1, &AGDRenderer::mVBO);
+		if (mVBO2 != 0)
+			glDeleteBuffers(1, &AGDRenderer::mVBO2);
 	}
 };
 #endif

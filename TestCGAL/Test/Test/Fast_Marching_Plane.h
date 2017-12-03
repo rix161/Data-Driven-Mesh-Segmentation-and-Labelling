@@ -1,7 +1,7 @@
 #ifndef __FAST_MARCHING_PLANE__
 #define __FAST_MARCHING_PLANE__
 #include "Common_Djikstra.h"
-#include "CGAL_geodesic.h"
+#include "GenericMesh.h"
 #include "Edge_Dijkstra.h"
 #include "updatePriorityQueue.h"
 
@@ -39,5 +39,6 @@ public:
 		std::set<Kernel::Point_3> fixedSet, 
 		std::set<Kernel::Point_3> &closedSet, 
 		std::set<Kernel::Point_3> &upProcessedSet);
+	void generateFeatures(const char*);
 };
 #endif

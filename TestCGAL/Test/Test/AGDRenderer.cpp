@@ -2,10 +2,13 @@
 #include "Transform.h"
 
 bool AGDRenderer::mSetupDone = -1;
-GLuint AGDRenderer::mVBO = -1;
-GLuint AGDRenderer::mVBO2 = -1;
+GLuint AGDRenderer::mVBO = 0;
+GLuint AGDRenderer::mVBO2 = 0;
 int AGDRenderer::mVBOSize = 0;
 int AGDRenderer::vertexCount = 0;
+float AGDRenderer::mTX = 0;
+float AGDRenderer::mTY = 0;
+float AGDRenderer::mTZ = 0;
 GLuint AGDRenderer::uMVPMatrix;
 
 int AGDRenderer::windowX;
@@ -144,7 +147,7 @@ void AGDRenderer::renderSceneDouble() {
 	static float angle = 0.002;
 	angle -= 0.0007;
 
-	mTransformation.translate(glm::vec3(-0.75, -0.5, -3.0));
+	mTransformation.translate(glm::vec3(-0.75+mTX, -0.5, -3.0+mTY));
 	mTransformation.scale(glm::vec3(1.0, 1.0, 1.0));
 	mTransformation.rotate(angle, glm::vec3(1.f, 0.0f, 0.0f));
 	mTransformation.projection(AGDRenderer::FOV, AGDRenderer::windowX, AGDRenderer::windowY, AGDRenderer::nearPlane, AGDRenderer::farPlane);
@@ -164,7 +167,7 @@ void AGDRenderer::renderSceneDouble() {
 	glDisableVertexAttribArray(1);
 	glDisableVertexAttribArray(2);
 
-	mTransformation2.translate(glm::vec3(0.75, -0.5, -3.0));
+	mTransformation2.translate(glm::vec3(0.75+mTX, -0.5, -3.0+mTY));
 	mTransformation2.scale(glm::vec3(1.0, 1.0, 1.0));
 	mTransformation2.rotate(angle, glm::vec3(1.0f, 0.0f, 0.0f));
 	mTransformation2.projection(AGDRenderer::FOV, AGDRenderer::windowX, AGDRenderer::windowY, AGDRenderer::nearPlane, AGDRenderer::farPlane);
@@ -201,7 +204,7 @@ void AGDRenderer::renderScene() {
 	static float angle = 0.002;
 	angle -= 0.0007;
 
-	mTransformation.translate(glm::vec3(-0.5, -1.5, -3.0));
+	mTransformation.translate(glm::vec3(-0.25+mTX, -1.0, -3.0+ mTY));
 	mTransformation.scale(glm::vec3(1.5, 1.5, 1.5));
 	mTransformation.rotate(angle, glm::vec3(0.25f, 1.0f, 0.0f));
 	mTransformation.projection(AGDRenderer::FOV, AGDRenderer::windowX, AGDRenderer::windowY, AGDRenderer::nearPlane, AGDRenderer::farPlane);

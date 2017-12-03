@@ -50,6 +50,12 @@ public:
 		retString = this->fileDirectory + std::string("\\") + "AGD_RAW" + std::string("\\") + this->fileName + ".txt";
 		return retString;
 	}
+
+	std::string getShapeContextFileName() {
+		std::string retString;
+		retString = this->fileDirectory + std::string("\\") + "ShapeContext" + std::string("\\") + this->fileName + ".txt";
+		return retString;
+	}
 };
 
 #endif

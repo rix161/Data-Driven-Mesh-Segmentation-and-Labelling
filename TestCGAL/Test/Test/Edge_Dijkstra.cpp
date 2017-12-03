@@ -15,7 +15,19 @@ void setupColorBins(std::vector<std::vector<int>> &colorBins) {
 	}
 }
 
-void EdgeDijkstra::generateFeatures() {
+void EdgeDijkstra::generateFeatures(const char* fileName) {
+	if (mMainMesh.is_empty()) return;
+
+	std::ofstream curFile;
+
+	curFile.open(fileName);
+	if (!curFile)
+		return;
+
+	for (vertex_iterator vi = mMainMesh.vertices_begin(); vi != mMainMesh.vertices_end(); vi++) {
+		double avgGeoDesic  = getAverageGeodesicDistance(vi);
+		curFile << (int)(*vi) << "\t" << avgGeoDesic << "\n";
+	}
 
 };
 
@@ -82,6 +94,9 @@ void EdgeDijkstra::generateFeatures(const char* source, const char* destination)
 		<< "\n";
 	}
 	
+	delete agdVector;
+	delete agdFaceVector;
+	delete agdFaceArea;
 }
 
 void EdgeDijkstra::compute() {

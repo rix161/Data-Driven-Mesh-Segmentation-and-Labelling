@@ -1,20 +1,12 @@
 #include <cstdlib>
 #include <iostream>
 #include <fstream>
-#include "CGAL_geodesic.h"
-#include "Edge_Dijkstra.h"
-#include "Fast_Marching_Plane.h"
-#include "ShapeDiameterFunction.h"
-#include "Off_Writer.h"
-#include "AGDRenderer.h"
-#include "SDFRenderer.h"
-#include "SDFUnit.h"
-#include "Curvature.h"
-#include "VIS.h"
 #include "FeatureUnit.h"
-#include <boost/filesystem.hpp>
 #include "UnifiedRenderer.h"
 
+
+#include "ShapeContext.h"
+#define RENDERING_MODE
 
 std::vector<FeatureUnit> getMeshFiles(const char* meshDir, const char* featureDir) {
 	std::vector<FeatureUnit> units;
@@ -27,7 +19,7 @@ std::vector<FeatureUnit> getMeshFiles(const char* meshDir, const char* featureDi
 			return units;
 	}
 
-	std::vector<std::string> featureDirs = { std::string("curvature"),std::string("VIS"),std::string("SDF"),std::string("AGD") };
+	std::vector<std::string> featureDirs = { std::string("curvature"),std::string("VIS"),std::string("SDF"),std::string("AGD"),std::string("ShapeContext") };
 	for (std::string dir : featureDirs) {
 		std::string fDir = featureDir + std::string("//") + dir;
 		if (!boost::filesystem::exists(fDir) && !boost::filesystem::create_directory(fDir)) {
@@ -47,16 +39,28 @@ std::vector<FeatureUnit> getMeshFiles(const char* meshDir, const char* featureDi
 }
 
 
-int main(int argc, char** argv)
-{
-	
-	if (argc != 3) {
-		std::cout << "Usage:program.exe <Mesh Directory> <Feature Directory>";
-		return 0;
-	}
-	
+int main(int argc, char** argv){
+
+#ifdef RENDERING_MODE
 	UnifiedRenderer uRenderer(argc, argv, 1024, 1024, "Mesh Features");
 	uRenderer.setupRendererParameters();
 	uRenderer.render();
 	return 0;
+#else
+
+	if (argc != 3) {
+		std::cout << "Usage:program.exe <Mesh Directory> <Feature Directory>";
+		return 0;
+	}
+	const char* meshDir = argv[1];
+	const char* featureDir = argv[2];
+
+	std::vector<FeatureUnit> fUnit = getMeshFiles(meshDir, featureDir);
+	for (FeatureUnit unit : fUnit) {
+		ShapeContext shapeContextFile(unit.getMeshFileName().c_str(),unit.getAGDRawFileName().c_str());
+		shapeContextFile.crunchMesh();
+		shapeContextFile.generateFeatures(unit.getShapeContextFileName().c_str());
+	}
+#endif
+
 } 

@@ -8,6 +8,8 @@
 #include <boost/lexical_cast.hpp>
 #include <iostream>
 #include <fstream>
+#include <GL/glew.h>
+#include <GL/freeglut.h>
 
 typedef CGAL::Exact_predicates_inexact_constructions_kernel Kernel;
 typedef CGAL::Surface_mesh<Kernel::Point_3> Triangle_mesh;

@@ -1,6 +1,5 @@
 #ifndef __EDGE_DIJSTRA__
 #define __EDGE_DIJSTRA__
-#include "CGAL_geodesic.h"
 #include "Common_Djikstra.h"
 #include "GenericMesh.h"
 
@@ -24,7 +23,7 @@ public:
 	double getAverageGeodesicDistance(vertex_iterator point);
 	//std::vector<DjiElement> getNeighbors(vertex_iterator inVertext, std::map<Kernel::Point_3, double>);
 	std::vector<DjiElement> getNeighbors(vertex_iterator inVertext, double cValue);
-	void generateFeatures();
+	void generateFeatures(const char*);
 	void generateFeatures(const char* filename,const char* destination);
 };
 #endif 

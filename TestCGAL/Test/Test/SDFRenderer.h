@@ -1,6 +1,5 @@
 #ifndef __SDF_RENDERER__
 #define __SDF_RENDERER__
-#include "CGRenderer.h"
 #include "ShaderHelper.h"
 #include "GenericMesh.h"
 #include "SDFUnit.h"
@@ -34,8 +33,13 @@ public:
 	static float FOV, nearPlane, farPlane;
 	GLuint getRenderedTexture();
 	static void renderScene();
+	static float mTX, mTY,mTZ;
 
-	SDFRenderer() {};
+	SDFRenderer() {
+		SDFRenderer::mVBO = 0;
+		mProgramId = 0;
+		mRayProgramId = 0;
+	};
 	SDFRenderer(int argc, char** argv, int sizeX, int sizeY, const char* title,bool standAlone=true) {
 		initRenderer(argc, argv, sizeX, sizeY, title, standAlone);
 	}
@@ -43,6 +47,12 @@ public:
 	void setWindow(int windowX, int windowY) {
 		this->windowX = windowX;
 		this->windowY = windowY;
+	}
+
+	void updateCamera(float tVal[]) {
+		mTX += tVal[0];
+		mTY += tVal[1];
+		mTZ += tVal[1];
 	}
 
 	void setupRendererParameters(
@@ -54,13 +64,14 @@ public:
 		std::vector<SDFUnit> rays);
 
 	~SDFRenderer() {
-		if (mProgramId != -1) {
+		if (mProgramId > 0) {
 			glDeleteProgram(mProgramId);
 		}
-		if (mRayProgramId != -1) {
+		if (mRayProgramId > 0) {
 			glDeleteProgram(mRayProgramId);
 		}
-		glDeleteBuffers(1,&SDFRenderer::mVBO);
+		if( mVBO > 0)
+			glDeleteBuffers(1,&SDFRenderer::mVBO);
 	}
 };
 #endif

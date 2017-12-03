@@ -1,8 +1,7 @@
 #ifndef __COMMON_DIJKSTRA__
 #define __COMMON_DIJKSTRA__
-
-#include "CGAL_geodesic.h"
 #include <vector>
+#include "GenericMesh.h"
 
 class DjiElement {
 

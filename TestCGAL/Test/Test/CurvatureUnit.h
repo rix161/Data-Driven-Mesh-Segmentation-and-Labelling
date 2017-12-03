@@ -1,7 +1,7 @@
 #ifndef __CURVATURE_UNIT__
 #define __CURVATURE_UNIT__
 
-#include "CGAL_geodesic.h"
+#include "GenericMesh.h"
 #include <vector>
 
 class CurvatureUnit {

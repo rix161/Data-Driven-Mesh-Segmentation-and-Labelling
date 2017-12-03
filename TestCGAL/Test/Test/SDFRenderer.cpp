@@ -7,6 +7,11 @@ GLuint SDFRenderer::mVBO2 = -1;
 int SDFRenderer::mVBOSize = 0;
 int SDFRenderer::vertexCount = 0;
 int SDFRenderer::rayCount = 0;
+
+float SDFRenderer::mTX = 0;
+float SDFRenderer::mTY = 0;
+float SDFRenderer::mTZ = 0;
+
 GLuint SDFRenderer::uMVPMatrix;
 
 int SDFRenderer::windowX;
@@ -82,13 +87,13 @@ void SDFRenderer::setupRendererParameters(
 			Kernel::Point_3 BaryPoint = barycenters[count % 3];
 			count++;
 			
-			meshData.push_back(tempPoint.x());
-			meshData.push_back(tempPoint.y());
-			meshData.push_back(tempPoint.z());
+			meshData.push_back((float)tempPoint.x());
+			meshData.push_back((float)tempPoint.y());
+			meshData.push_back((float)tempPoint.z());
 
-			meshData.push_back(BaryPoint.x());
-			meshData.push_back(BaryPoint.y());
-			meshData.push_back(BaryPoint.z());
+			meshData.push_back((float)BaryPoint.x());
+			meshData.push_back((float)BaryPoint.y());
+			meshData.push_back((float)BaryPoint.z());
 
 			meshData.push_back(1.0);
 			meshData.push_back(1.0);
@@ -148,10 +153,10 @@ void SDFRenderer::renderScene() {
 	glDepthMask(false);
 
 	Transform mTransformation;
-	static float angle = 0.002;
-	angle -= 0.0007;
+	static float angle = 0.002f;
+	angle -= 0.0007f;
 
-	mTransformation.translate(glm::vec3(-0.5, -1.5, -3.0));
+	mTransformation.translate(glm::vec3(-0.25+mTX, -1.0, -3.0+mTY));
 	mTransformation.scale(glm::vec3(2.0, 2.0, 2.0));
 	mTransformation.rotate(angle, glm::vec3(0.0f, 1.0f, 0.0f));
 	mTransformation.projection(SDFRenderer::FOV, SDFRenderer::windowX, SDFRenderer::windowY, SDFRenderer::nearPlane, SDFRenderer::farPlane);

@@ -75,7 +75,7 @@ void FastMarchingPlanes::compute() {
 		faceIndex.push_back(vertexIndex);
 
 		avgGd /= count;
-		int binNum = floor((avgGd - min) / range);
+		int binNum = (int)floor((avgGd - min) / range);
 		std::vector<int> colorVec = colorBin[binNum];
 		faceColor.push_back(colorVec);
 	}
@@ -319,3 +319,20 @@ double FastMarchingPlanes::getAverageGeodesicDistance(vertex_iterator sourcePoin
 	return sum / vertexMap.size();
 
 }
+
+
+void FastMarchingPlanes::generateFeatures(const char* fileName) {
+	if (mMainMesh.is_empty()) return;
+
+	std::ofstream curFile;
+
+	curFile.open(fileName);
+	if (!curFile)
+		return;
+
+	for (vertex_iterator vi = mMainMesh.vertices_begin(); vi != mMainMesh.vertices_end(); vi++) {
+		double avgGeoDesic = getAverageGeodesicDistance(vi);
+		curFile << (int)(*vi) << "\t" << avgGeoDesic << "\n";
+	}
+
+};

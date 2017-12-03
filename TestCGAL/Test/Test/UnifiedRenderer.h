@@ -5,14 +5,17 @@
 #include <iostream>
 #include "SDFRenderer.h"
 #include "AGDRenderer.h"
+#include "SCRenderer.h"
 #include "Off_Writer.h"
 
 class UnifiedRenderer {
-private:
+public:
 	static SDFRenderer mSDFRenderer;
 	static AGDRenderer mAGDRenderer;
 	static AGDRenderer mCurRenderer;
 	static AGDRenderer mResultRenderer;
+	static SCRenderer  mSCRenderer;
+
 	static int mRendererType;
 
 protected:
@@ -28,6 +31,9 @@ public:
 	static void renderScene();
 	static void keyboardCallback(unsigned char nChar, int x, int y);
 	void setupRendererParameters();
+	static void menuSelection(int idCommand);
+	static int buildMenu(void);
+	static void updateRenderer(float val[]);
 };
 
 #endif

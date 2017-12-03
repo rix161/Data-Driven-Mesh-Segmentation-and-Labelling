@@ -1,6 +1,6 @@
 #ifndef OFF_WRITER_HEADER
 #define OFF_WRITER_HEADER
-#include "CGAL_geodesic.h"
+
 #include "GenericMesh.h"
 #include<vector>
 #include <iostream>

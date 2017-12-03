@@ -1,6 +1,6 @@
 #ifndef __SHAPE_DIAMETER_FUNCTION__
 #define __SHAPE_DIAMETER_FUNCTION__
-#include "CGAL_geodesic.h"
+
 #include "SDFUnit.h"
 #include "GenericMesh.h"
 #include <vector>
