@@ -23,6 +23,8 @@ public:
 
 	}
 
+	FastMarchingPlanes(const char* fileName) :EdgeDijkstra(fileName) {}
+
 	~FastMarchingPlanes() {
 
 		/*for (int i = 0; i < mMainMesh.number_of_vertices(); i++) {

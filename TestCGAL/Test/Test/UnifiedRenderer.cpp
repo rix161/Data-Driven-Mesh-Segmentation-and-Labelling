@@ -208,6 +208,20 @@ void UnifiedRenderer::keyboardCallback(unsigned char featureChar, int x, int y) 
 			tVal[2] = 0.0;
 			updateRenderer(tVal);
 			break;
+
+		case 'q':
+			tVal[0] = 0.0;
+			tVal[1] = 0.0;
+			tVal[2] = 0.05;
+			updateRenderer(tVal);
+			break;
+
+		case 'e':
+			tVal[0] = 0.0;
+			tVal[1] = 0.0;
+			tVal[2] = -0.05;
+			updateRenderer(tVal);
+			break;
 	}
 	glutPostRedisplay();
 }
@@ -255,7 +269,6 @@ void UnifiedRenderer::initRenderer(int argc, char** argv, int sizeX, int sizeY, 
 	this ->buildMenu();
 	glutAttachMenu(GLUT_RIGHT_BUTTON);
 
-	// Must be done after glut is initialized!
 	GLenum res = glewInit();
 	if (res != GLEW_OK) {
 		std::cout << "Error: '%s'\n" << glewGetErrorString(res);

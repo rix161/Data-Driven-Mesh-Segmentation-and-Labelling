@@ -22,6 +22,14 @@ typedef Graph_traits::face_iterator face_iterator;
 class Curvature:public GenericMesh {
 
 private:
+	std::vector<double> areas;
+	std::vector<Kernel::Vector_3> coord;
+	std::vector<Kernel::Vector_3> normals;
+	std::vector<double> kMean;
+	std::vector<double> kGauss;
+	std::map<Kernel::Point_3, CGAL::SM_Vertex_index> vertexMap;
+	std::vector<CurvatureUnit> results;
+
 	void computeBaryCenteric(Kernel::Point_3, Kernel::Vector_3, std::vector<Kernel::Point_3>, double &, double &, double &);
 	void buildNRings(face_iterator, std::set<Kernel::Point_3> &, int n);
 	void buildNRings(face_iterator, std::set<Triangle_mesh::Face_index> &, int n);
@@ -32,5 +40,10 @@ public:
 	void computeMeshCurvature();
 	std::vector<CurvatureUnit> computeMeshCurvature2();
 	void generateFeatures(const char* fileName);
+	std::vector<float> computeFaceAngles(face_iterator,std::vector<Kernel::Point_3> faceVertices);
+	void computeVoronialAcute(std::vector<Kernel::Point_3> faceVertices, std::vector<float> faceAngles);
+	void computeVoronialObtuse(std::vector<Kernel::Point_3> faceVertices, std::vector<float> faceAngles);
+	void computeGaussianAndMeanCurvature(face_iterator);
+	void initVectors();
 };
 #endif // ! __CURVATURE_FEATURE__

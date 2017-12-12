@@ -228,7 +228,7 @@ void SCRenderer::setupRendererParameters(
 
 	SCRenderer::mSetupDone = true;
 	SCRenderer::mVBOSize = sizeof(meshData[0]);
-	SCRenderer::vertexCount = meshData.size();
+	SCRenderer::vertexCount = mainMeshData.size();
 	SCRenderer::indexCount = indexData.size();
 	SCRenderer::pointCount = pointData.size();
 }
@@ -245,7 +245,7 @@ void SCRenderer::renderScene() {
 	static float angle = 0.002;
 	angle -= 0.0007;
 
-	mTransformation.translate(glm::vec3(-0.75+mTX, -0.5, -3.0+mTY));
+	mTransformation.translate(glm::vec3(-0.75+mTX, -0.5+mTY, -2.5+mTZ));
 	mTransformation.rotate(angle, glm::vec3(0.0f, 1.0f, 0.0f));
 	mTransformation.projection(SCRenderer::FOV, SCRenderer::windowX, SCRenderer::windowY, SCRenderer::nearPlane, SCRenderer::farPlane);
 	
@@ -281,7 +281,7 @@ void SCRenderer::renderScene() {
 		glDisableVertexAttribArray(1);
 	}
 
-	mTransformation2.translate(glm::vec3(0.75+mTX, -1.5, -3.0+mTY));
+	mTransformation2.translate(glm::vec3(0.75+mTX, -1.5 + mTY, -5.0+mTZ));
 	mTransformation2.rotate(angle, glm::vec3(0.0f, 1.0f, 0.0f));
 	mTransformation2.projection(SCRenderer::FOV, SCRenderer::windowX, SCRenderer::windowY, SCRenderer::nearPlane, SCRenderer::farPlane);
 	mTransformation2.scale(glm::vec3(3.0, 3.0, 3.0));

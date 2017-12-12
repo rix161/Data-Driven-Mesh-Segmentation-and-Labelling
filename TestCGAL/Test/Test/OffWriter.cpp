@@ -111,6 +111,7 @@ void OffWriter::writeFile(const char* fileName,
 		std::vector<std::vector<int>>::iterator ColorfcIt = faceColor.begin();
 		for (std::vector<std::deque<int>>::iterator it = faceList.begin(); it != faceList.end(); it++) {
 			std::deque<int> pt = *it;
+			//std::cout<< "FaceData:" << pt[0] << " " << pt[1] << " " << pt[2] << " " << pt[3] << " ";
 			mfile << pt[0] << " " << pt[1] << " " << pt[2]<<" "<<pt[3]<<" ";
 			if (ColorfcIt != faceColor.end()) {
 				std::vector<int> color = *ColorfcIt;

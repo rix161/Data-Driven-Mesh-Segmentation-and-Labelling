@@ -107,6 +107,7 @@ void EdgeDijkstra::compute() {
 	OffWriter writter;
 	std::map<Kernel::Point_3, double> agdMap;
 	int vCount = 0;
+	vertexIndex.clear();
 	for (vertex_iterator vi = mMainMesh.vertices_begin(); vi != mMainMesh.vertices_end(); vi++) {
 		if (vCount % 100 == 0)
 			std::cout << "Vcount: " << vCount << std::endl;
@@ -123,7 +124,8 @@ void EdgeDijkstra::compute() {
 	double range = (max - min) / binCount;
 	std::vector<std::vector<int>> colorBin(binCount);
 	setupColorBins(colorBin);
-
+	
+	faceIndex.clear();
 	for (face_iterator fit = mMainMesh.faces().begin(); fit != mMainMesh.faces().end(); fit++) {
 		CGAL::Vertex_around_face_iterator<Triangle_mesh> vbegin, vend;
 		double avgGd = 0.0;
@@ -134,6 +136,7 @@ void EdgeDijkstra::compute() {
 			vertexIndex.push_back((int)(*vbegin));
 			avgGd += agdMap[mMainMesh.point(*vbegin)];
 			count++;
+
 		}
 		vertexIndex.push_front(count);
 		faceIndex.push_back(vertexIndex);

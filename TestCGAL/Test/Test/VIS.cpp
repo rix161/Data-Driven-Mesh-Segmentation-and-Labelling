@@ -61,8 +61,8 @@ void VIS::generateFeatures(const char* destinationFileSDF, const char* destinati
 	int count = 0;
 
 	for (face_iterator fit = mMainMesh.faces_begin(); fit != mMainMesh.faces_end(); fit++) {
-		if(count%100 ==0)
-			std::cout << "Face:" << (int)(*fit) << std::endl;
+		//if(count%100 ==0)
+		//	std::cout << "Face:" << (int)(*fit) << std::endl;
 		count++;
 		sdfFile << (int)(*fit) << "\t";
 		visFile << (int)(*fit) << "\t";

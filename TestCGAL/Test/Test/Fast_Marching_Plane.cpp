@@ -43,13 +43,14 @@ void FastMarchingPlanes::compute() {
 	std::chrono::system_clock::time_point start;
 	double seconds;
 
+	vertexIndex.clear();
 	for (vertex_iterator it = mMainMesh.vertices().begin(); it != mMainMesh.vertices().end(); it++) {
 		start = std::chrono::system_clock::now();
 		double agdDist = getAverageGeodesicDistance(it);
 		seconds = std::chrono::duration_cast<std::chrono::seconds>(std::chrono::system_clock::now() - start).count();
 
 		Kernel::Point_3 pt = mMainMesh.point(*it);
-		std::cout << " " << count++ << "Pt:" << mMainMesh.point(*it) << "Dist:" << agdDist<<"Time:"<<seconds<<std::endl;
+		//std::cout << " " << count++ << "Pt:" << mMainMesh.point(*it) << "Dist:" << agdDist<<"Time:"<<seconds<<std::endl;
 		vertexIndex.push_back(pt);
 		agdMap[pt] = agdDist;
 		if (agdDist > max) max = agdDist;
@@ -59,7 +60,7 @@ void FastMarchingPlanes::compute() {
 	double range = (max - min) / binCount;
 	std::vector<std::vector<int>> colorBin(binCount);
 	initColorBins(colorBin);
-
+	faceIndex.clear();
 	for (face_iterator fit = mMainMesh.faces().begin(); fit != mMainMesh.faces().end(); fit++) {
 		CGAL::Vertex_around_face_iterator<Triangle_mesh> vbegin, vend;
 		double avgGd = 0.0;
@@ -72,6 +73,7 @@ void FastMarchingPlanes::compute() {
 			count++;
 		}
 		vertexIndex.push_front(count);
+		//std::cout << "vIndex" << vertexIndex[0] << vertexIndex[1] << vertexIndex[2] << vertexIndex[3]<<std::endl;
 		faceIndex.push_back(vertexIndex);
 
 		avgGd /= count;

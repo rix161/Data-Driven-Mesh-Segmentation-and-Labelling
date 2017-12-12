@@ -156,7 +156,7 @@ void SDFRenderer::renderScene() {
 	static float angle = 0.002f;
 	angle -= 0.0007f;
 
-	mTransformation.translate(glm::vec3(-0.25+mTX, -1.0, -3.0+mTY));
+	mTransformation.translate(glm::vec3(-0.25+mTX, -1.0 + mTY, -3.0+mTZ));
 	mTransformation.scale(glm::vec3(2.0, 2.0, 2.0));
 	mTransformation.rotate(angle, glm::vec3(0.0f, 1.0f, 0.0f));
 	mTransformation.projection(SDFRenderer::FOV, SDFRenderer::windowX, SDFRenderer::windowY, SDFRenderer::nearPlane, SDFRenderer::farPlane);

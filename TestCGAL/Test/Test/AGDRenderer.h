@@ -47,7 +47,7 @@ public:
 	void updateCamera(float tVal[]) {
 		mTX += tVal[0];
 		mTY += tVal[1];
-		mTZ += tVal[1];
+		mTZ += tVal[2];
 	}
 	void setupRendererParameters(
 		const char* vertexShader,
