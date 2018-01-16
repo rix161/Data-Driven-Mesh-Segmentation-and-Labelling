@@ -10,7 +10,7 @@ The problem of mesh labelling can be viewed a classification problem as such thi
 using a ensemble of mesh descriptors which effectively and concisely capture the surface,volume and orientation of the mesh.
 
 #### Mesh Features
-#####The features implemented are
+##### The features implemented are
 
 1. Average Geodesic Distance (Local surface property) 
 >Approximate average geodesic distance using fast marching algorithm.
@@ -34,20 +34,18 @@ using a ensemble of mesh descriptors which effectively and concisely capture the
 
 
 #### Mesh Labelling and Segmentation.
-#####A Random Forest Classifier was able to label the mesh with an accuracy of 92% and an SVM Classifier with accuracy of 93%. 
-#####Random Forest classifier was finally chosen as it is faster to train.
+##### A Random Forest Classifier was able to label the mesh with an accuracy of 92% and an SVM Classifier with accuracy of 93%. 
+##### Random Forest classifier was finally chosen as it is faster to train.
 
 ##### Results 
 	
->>![ClassImage](https://github.com/rix161/SBU_ComputerGraphics/blob/master/TestCGAL/Test/SceenShots/ResultClass.png)
->Time to generate each features
->>![TimeFeatureImage](https://github.com/rix161/SBU_ComputerGraphics/blob/master/TestCGAL/Test/SceenShots/TimeFeature.png)
->Feature wise and Part wise precision
+>![ClassImage](https://github.com/rix161/SBU_ComputerGraphics/blob/master/TestCGAL/Test/SceenShots/ResultClass.png)
+>>Time to generate each features
+>>>![TimeFeatureImage](https://github.com/rix161/SBU_ComputerGraphics/blob/master/TestCGAL/Test/SceenShots/TimeFeature.png)
+>>Feature wise and Part wise precision
 >>![FeaturePImage](https://github.com/rix161/SBU_ComputerGraphics/blob/master/TestCGAL/Test/SceenShots/PartPrecision.png)
+>>![PartPImage](https://github.com/rix161/SBU_ComputerGraphics/blob/master/TestCGAL/Test/SceenShots/FeaturePrecision.png)
 
 
-![PartPImage](https://github.com/rix161/SBU_ComputerGraphics/blob/master/TestCGAL/Test/SceenShots/FeaturePrecision.png)
-
-
-Please Checkout Presentation Folder for detailed report.
+Please Checkout [Presentation](https://github.com/rix161/SBU_ComputerGraphics/blob/master/Presentation/Project%20Report/Data%20Driven%20Mesh%20segmentation%20and%20labeling.pdf)Folder for detailed report.
  
